@@ -16,7 +16,7 @@
                             <input type="file" id='upgteimg' multiple @change="upImg($event)">
                             <ul class='ztimg imgbox'>
                                 <li v-for="(item,index) in img" :key='index'>
-                                    <el-image :src="item" :fit='fittype' :preview-src-list="img"></el-image>
+                                    <el-image :src="item" :fit='fittype' @click='look(index,img)'></el-image>
                                     <p>
                                         <a @click="left(index,'zt')"><i class="el-icon-back"></i></a>
                                         <a @click="del(index,'zt')" ><i class="el-icon-delete"></i></a>
@@ -29,7 +29,7 @@
                         </div>
                         <div>
                             <el-button type="primary" @click='addBt'>添加变体</el-button>
-                            <el-button type="success" @click='consoleData'>添加变体</el-button>
+                            <el-button type="success" @click='consoleData'>查看变体数据</el-button>
                             <div class='btbox'>
                                 <table>
                                     <tbody>
@@ -48,7 +48,7 @@
                                                     <td>
                                                         <ul class='ztimg imgbox'>
                                                             <li v-for="(aa,i) in item.imgs" :key='i'>
-                                                                <el-image :src="aa" :fit='fittype' :preview-src-list="item.imgs"></el-image>
+                                                                <el-image :src="aa" :fit='fittype' @click="look(i,item.imgs)"></el-image>
                                                                 <p>
                                                                     <a @click="left(index,'bt',i)"><i class="el-icon-back"></i></a>
                                                                     <a @click="del(index,'bt',i)" ><i class="el-icon-delete"></i></a>
@@ -61,14 +61,12 @@
                                                     </td>
                                                 </tr>
                                             </td>
-                                            
                                         </tr>
-                                        
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                       
+                       <imglook ref='imglookData' :parentData='parentData' ></imglook>
                         
                     </el-form>   
                 </el-tab-pane>
@@ -76,17 +74,23 @@
                     <h1>用户管理dsfasdfasdfa</h1>    
                 </el-tab-pane>
             </el-tabs>  
+        
         </div>
 </template>
 <script>
+    import imglook from '../child/imgLook/imglook'
     export default {
         data() {
             return {
                 fittype:'scale-down',
+                parentData:{
+                    index:null,
+                    imgList:[]
+                },
                 url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                 srcList: [
-                'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-                'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
+                    'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
+                    'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
                 ],
                 activeName: 'first',
                 labelPosition: 'right',
@@ -107,6 +111,14 @@
                               'http://caijiqi.oss-cn-hangzhou.aliyuncs.com/upload/zhouzong/201911281319/71m4kJRONs1jF96.jpg',
                               'http://caijiqi.oss-cn-hangzhou.aliyuncs.com/upload/zhouzong/201911281510/3vs9jXIbDN38hdt.jpg'
                           ]
+                    },
+                    {
+                        name:'123',cb:'234',price:'324',kc:'345',txm:'ret',
+                        imgs:['http://caijiqi.oss-cn-hangzhou.aliyuncs.com/upload/zhouzong/201911281320/GliL7X3KoMDvxkq.jpg',
+                              'http://caijiqi.oss-cn-hangzhou.aliyuncs.com/upload/zhouzong/201911281319/71m4kJRONs1jF96.jpg',
+                              'http://caijiqi.oss-cn-hangzhou.aliyuncs.com/upload/zhouzong/201911281510/3vs9jXIbDN38hdt.jpg',
+                              'http://caijiqi.oss-cn-hangzhou.aliyuncs.com/upload/zhouzong/201911271444/96LWaP8vY1JUlBF.jpg'
+                          ]
                     }
                 ]
             };
@@ -114,42 +126,50 @@
         mounted(){
             
         },
+        components:{
+            imglook:imglook
+        },
         methods: {
             handleClick(tab, event) {
                 console.log(tab, event);
             },
+            /* 查看图片 */
+            look(index,img){
+                this.parentData.index=index
+                this.parentData.imgList=img
+                this.$refs.imglookData.imglookShow=true
+                console.log(this.$refs.imglookData)
+                console.log(this.parentData)
+            },
             /*左右移动*/
             left(index,type,i){
-                if(index>0 || i>0){
-                    if(type==='zt'){
-                        var fromimg=this.img[index]
-                        var toimg=this.img[index-1]
-                        this.img.splice(index,1,toimg) 
-                        this.img.splice(index-1,1,fromimg) 
-                    }else if(type==='bt'){
-                        var fromimg=this.btData[index].imgs[i]
-                        var toimg=  this.btData[index].imgs[i-1]
-                        console.log(fromimg,toimg)
-                        this.btData[index].imgs.splice(i,1,toimg) 
-                        this.btData[index].imgs.splice(i-1,1,fromimg) 
-                    }
+                if(type==='zt'&&index>0){
+                    var fromimg=this.img[index]
+                    var toimg=this.img[index-1]
+                    this.img.splice(index,1,toimg) 
+                    this.img.splice(index-1,1,fromimg) 
+                }else if(type==='bt'&&i>0){
+                    var fromimg=this.btData[index].imgs[i]
+                    var toimg=  this.btData[index].imgs[i-1]
+                    this.btData[index].imgs.splice(i,1,toimg) 
+                    this.btData[index].imgs.splice(i-1,1,fromimg) 
                 }else{
                     return
                 }
             },
             right(index,type,i){
-                if(index<this.img.length-1&type==='zt'){
-                    
-                        var fromimg=this.img[index]
-                        var toimg=this.img[index+1]
-                        this.img.splice(index,1,toimg) 
-                        this.img.splice(index+1,1,fromimg)
-                    
-                }else if(i<this.btData[index].imgs.length-1&type==='zt'){
+                console.log(arguments)
+                if(index<this.img.length-1 && type==='zt'){
+                    console.log(arguments)
+                    var fromimg=this.img[index]
+                    var toimg=this.img[index+1]
+                    this.img.splice(index,1,toimg) 
+                    this.img.splice(index+1,1,fromimg)
+                }else if(i<this.btData[index].imgs.length-1 && type==='bt'){
                     var fromimg=this.btData[index].imgs[i]
-                        var toimg=  this.btData[index].imgs[i+1]
-                        this.btData[index].imgs.splice(i,1,toimg) 
-                        this.btData[index].imgs.splice(i+1,1,fromimg) 
+                    var toimg=  this.btData[index].imgs[i+1]
+                    this.btData[index].imgs.splice(i,1,toimg) 
+                    this.btData[index].imgs.splice(i+1,1,fromimg) 
                 }else{
                     return
                 }
@@ -183,7 +203,7 @@
 
             },
             addBt(){
-                this.btData.push({name:'',cb:'',price:'',kc:'',txm:'',imgs:[]})
+                this.btData.push({name:'',cb:'',price:'',kc:'',txm:'',imgs:['http://caijiqi.oss-cn-hangzhou.aliyuncs.com/upload/zhouzong/201911271444/96LWaP8vY1JUlBF.jpg']})
             },
             delBt(index){
                 this.btData.splice(index,1)

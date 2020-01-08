@@ -1,44 +1,127 @@
 <template>
   <div>
-    <el-row :gutter="24">
-      <el-col :span="6">
-        <div class="grid-content bg-purple">
-            <div>
-                <p>已启用商品数/总数</p>
-                <p>103/ 104</p>
-                <el-progress :percentage="50" ></el-progress>
+    <div style="padding:20px;background:#fff;position:relative">
+            <div style="position: absolute;right: 10px;z-index: 22;">
+                <p style="display:inline-block">账号：</p>
+                <el-select v-model="Account" size="mini" filterable style="width:180px">
+                    <el-option :label="item.name+'--'+item.ac_zj_Account" :value="item.ac_zj_Account" v-for="(item,key) in AccountList" :key='key'></el-option>
+                </el-select>
+                <el-tooltip class="item"  v-if='activeName!=0'  effect="dark" content="关闭" placement="bottom-end">
+                    <el-button size="mini" type='danger' icon="el-icon-close"  @click="activeName=''"></el-button>
+                </el-tooltip>
             </div>
-            <div>
-                <p>已启用商品数/总数</p>
-                <p>103/ 104</p>
-                <el-progress :percentage="50" ></el-progress>
-            </div>
+            <el-tabs v-model="activeName" @tab-click="handleClick" style="">
+              <el-tab-pane label="当日资金查询数据" name="first">
+                  <template>
+                    <el-table :data="tableData" height="500" style="width: 100%">
+                        <el-table-column prop='a' label="资金账号"></el-table-column>
+                        <el-table-column prop='b' label="币别"></el-table-column>
+                        <el-table-column prop='c' label="资金余额"></el-table-column>
+                        <el-table-column prop='d' label="可用资金"></el-table-column>
+                        <el-table-column prop='e' label="冻结资金"></el-table-column>
+                        <el-table-column prop='f' label="可取资金"></el-table-column>
+                        <el-table-column prop='j' label="最新市值"></el-table-column>
+                        <el-table-column prop='h' label="总资金"></el-table-column>
+                        <el-table-column prop='i' label="买入冻结资金" width="120"></el-table-column>
+                        <el-table-column prop='j' label="备注"></el-table-column>
+                        <el-table-column prop='k' label="句柄"></el-table-column>
+                        <el-table-column prop='l' label="保留信息"></el-table-column>
+                    </el-table>
+                    <div class="block" style="height:32px">
+                        <el-pagination
+                        style="height:50px"
+                          @size-change="handleSizeChange($event,'api/People/ShowPeople')"
+                          @current-change="handleCurrentChange($event,'api/People/ShowPeople')"
+                          :current-page="currentPage1"
+                          :page-sizes="[10, 20, 50, 100]"
+                          :page-size="10"
+                          layout="total, sizes, prev, pager, next, jumper"
+                          :total="totalpage1">
+                        </el-pagination>
+                    </div>
+                  </template>
+              </el-tab-pane>
+              <el-tab-pane label="当日持仓数据" name="second">
+                  <template >
+                    <el-table :data="table_chicang" height="500" style="width: 100%">
+                        <el-table-column prop="a" label="证券代码"></el-table-column>
+                        <el-table-column prop="b" label="证券名称"></el-table-column>
+                        <el-table-column prop="c" label="证券数量"></el-table-column>
+                        <el-table-column prop="d" label="库存数量"></el-table-column>
+                        <el-table-column prop="e" label="可卖数量"></el-table-column>
+                        <el-table-column prop="f" label="成本价"></el-table-column>
+                        <el-table-column prop="g" label="盈亏成本价" width="120"></el-table-column>
+                        <el-table-column prop="h" label="当前价"></el-table-column>
+                        <el-table-column prop="i" label="最新市值"></el-table-column>
+                        <el-table-column prop="j" label="浮动盈亏"></el-table-column>
+                        <el-table-column prop="k" label="盈亏比例(%)" width="120"></el-table-column>
+                        <el-table-column prop="l" label="股东代码"></el-table-column>
+                        <el-table-column prop="m" label="帐号类别"></el-table-column>
+                        <el-table-column prop="n" label="交易所代码" width="120"></el-table-column>
+                        <el-table-column prop="o" label="资金帐号"></el-table-column>
+                        <el-table-column prop="p" label="交易所名称" width="120"></el-table-column>
+                        <el-table-column prop="q" label="句柄"></el-table-column>
+                        <el-table-column prop="r" label="保留信息"></el-table-column>
+                    </el-table>
+                    <div class="block" style="height:32px">
+                        <el-pagination
+                        style="height:50px"
+                          @size-change="handleSizeChange($event,'api/People/ShowPeople')"
+                          @current-change="handleCurrentChange($event,'api/People/ShowPeople')"
+                          :current-page="currentPage2"
+                          :page-sizes="[10, 20, 50, 100]"
+                          :page-size="10"
+                          layout="total, sizes, prev, pager, next, jumper"
+                          :total="totalpage2">
+                        </el-pagination>
+                    </div>
+                  </template>         
+              </el-tab-pane>
+              <el-tab-pane label="当日可撤订单数据" name="fiveth">
+                  <template>
+                    <el-table :data="table_cx" height="500" style="width: 100%">
+                      <el-table-column prop="a" label="委托日期"></el-table-column>
+                      <el-table-column prop="b" label="委托时间"></el-table-column>
+                      <el-table-column prop="c" label="证券代码"></el-table-column>
+                      <el-table-column prop="d" label="证券名称"></el-table-column>
+                      <el-table-column prop="e" label="状态说明"></el-table-column>
+                      <el-table-column prop="f" label="买卖标志"></el-table-column>
+                      <el-table-column prop="g" label="买卖标志"></el-table-column>
+                      <el-table-column prop="h" label="委托价格"></el-table-column>
+                      <el-table-column prop="i" label="委托数量"></el-table-column>
+                      <el-table-column prop="j" label="委托金额"></el-table-column>
+                      <el-table-column prop="k" label="委托编号"></el-table-column>
+                      <el-table-column prop="l" label="成交数量"></el-table-column>
+                      <el-table-column prop="m" label="撤单数量"></el-table-column>
+                      <el-table-column prop="n" label="股东代码"></el-table-column>
+                      <el-table-column prop="o" label="帐号类别"></el-table-column>
+                      <el-table-column prop="p" label="资金帐号"></el-table-column>
+                      <el-table-column prop="q" label="备注"></el-table-column>
+                      <el-table-column prop="r" label="句柄"></el-table-column>
+                      <el-table-column prop="s" label="保留信息"></el-table-column>
+                    </el-table>
+                    <div class="block" style="height:32px">
+                      <el-pagination
+                      style="height:50px"
+                        @size-change="handleSizeChange($event,'api/People/ShowPeople')"
+                        @current-change="handleCurrentChange($event,'api/People/ShowPeople')"
+                        :current-page="currentPage3"
+                        :page-sizes="[10, 20, 50, 100]"
+                        :page-size="10"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="totalpage3">
+                      </el-pagination>
+                  </div>
+                  </template>  
+              </el-tab-pane>
+            </el-tabs>
         </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="grid-content bg-purple">
-            <div>
-                <p>已启用商品数/总数</p>
-                <p>103/ 104</p>
-                <el-progress :percentage="50" ></el-progress>
-            </div>
-            <div>
-                <p>已启用商品数/总数</p>
-                <p>103/ 104</p>
-                <el-progress :percentage="50" ></el-progress>
-            </div>
-        </div>
-      </el-col>
-      <el-col :span="6"><div :id='myid1' class="grid-content bg-purple"></div></el-col>
-      <el-col :span="6"><div :id='myid'  class="grid-content bg-purple"></div></el-col>
-    </el-row>
-    <div :id="id" :class="className" style="width:100%;height:400px" />
+    <div :id="id" :class="className" style="width:100%;height:400px;padding-top:20px" />
   </div>
-  
 </template>
-
 <script>
 import echarts from 'echarts'
+import {req_AccountList,table_req} from '../../../assets/myaxios'
 export default {
   props: {
     className: {
@@ -60,18 +143,29 @@ export default {
   },
   data() {
     return {
+      activeName:0, 
+      AccountList:[],
+      Account:'',
       chart: null,
-      mychar:'mychar999',
-      mychar1:'mychar999',
-      myid:'isadaisg',
-      myid1:'45qwew'
-      
+      timer:null,
+      table_cx:[],
+      tableData:[],
+      table_chicang:[],
+      currentPage1:10,
+      totalpage1:10,
+      currentPage2:10,
+      totalpage2:10,
+      currentPage3:10,
+      totalpage3:10,
     }
   },
   mounted() {
+    console.log(this.activeName)
+    this.req_AccountList()
+    // this.timer=setInterval(()=>{
+    //       console.log('5000定时器')
+    //   },2000)
     this.initChart()
-    this.initMyChar()
-    this.initMyChar1()
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -79,26 +173,53 @@ export default {
     }
     this.chart.dispose()
     this.chart = null
+    clearInterval(this.timer)      
+    this.timer = null
   },
   methods: {
+    req_AccountList,
+    table_req,
+    handleClick(tab) {
+          if(this.Account==""){
+               this.$message({
+                  message: '请先选择账号',
+                  type: 'warning'
+                });
+              return  
+          }
+          switch(this.activeName) {
+              case 'first':
+                      this.table_req('api/Bond/ShowCapital',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'sraech')
+                  break;
+              case 'second':
+                      this.table_req('api/Bond/ShowTodayHolder',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'cc') 
+                  break;
+              case 'fiveth':
+                  if(this.table_cx.length===0){
+                      this.table_req('api/Bond/ShowCd',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'cx')
+                  }
+                  break; 
+              default:
+          }
+      },
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id))
       const xData = (function() {
         const data = []
-        for (let i = 1; i < 13; i++) {
-          data.push(i + 'month')
+        for (let i = 1; i < 30; i++) {
+          data.push(i + '天')
         }
         return data
       }())
       this.chart.setOption({
         backgroundColor: '#344b58',
         title: {
-          text: 'statistics',
+          text: '股票走势',
           x: '20',
-          top: '20',
+          top: '10',
           textStyle: {
             color: '#fff',
-            fontSize: '22'
+            fontSize: '18'
           },
           subtextStyle: {
             color: '#90979c',
@@ -129,7 +250,7 @@ export default {
           textStyle: {
             color: '#90979c'
           },
-          data: ['female', 'male', 'average']
+          data: ['female', 'male', 'hhkj']
         },
         calculable: true,
         xAxis: [{
@@ -187,7 +308,6 @@ export default {
           handleSize: '110%',
           handleStyle: {
             color: '#d3dee5'
-
           },
           textStyle: {
             color: '#fff' },
@@ -200,76 +320,77 @@ export default {
           start: 1,
           end: 35
         }],
-        series: [{
-          name: 'female',
-          type: 'bar',
-          stack: 'total',
-          barMaxWidth: 35,
-          barGap: '10%',
-          itemStyle: {
-            normal: {
-              color: 'rgba(255,144,128,1)',
-              label: {
-                show: true,
-                textStyle: {
-                  color: '#fff'
-                },
-                position: 'insideTop',
-                formatter(p) {
-                  return p.value > 0 ? p.value : ''
-                }
-              }
-            }
-          },
-          data: [
-            709,
-            1917,
-            2455,
-            2610,
-            1719,
-            1433,
-            1544,
-            3285,
-            5208,
-            3372,
-            2484,
-            4078
-          ]
-        },
-
+        series: [
+        //   {
+        //     name: 'female',
+        //     type: 'bar',
+        //     stack: 'total',
+        //     barMaxWidth: 35,
+        //     barGap: '10%',
+        //     itemStyle: {
+        //     normal: {
+        //       color: 'rgba(255,144,128,1)',
+        //       label: {
+        //         show: true,
+        //         textStyle: {
+        //           color: '#fff'
+        //         },
+        //         position: 'insideTop',
+        //         formatter(p) {
+        //           return p.value > 0 ? p.value : ''
+        //         }
+        //       }
+        //     }
+        //   },
+        //   data: [
+        //     -709,
+        //     1917,
+        //     2455,
+        //     2610,
+        //     1719,
+        //     1433,
+        //     1544,
+        //     3285,
+        //     5208,
+        //     3372,
+        //     2484,
+        //     4078
+        //   ]
+        // },
+        // {
+        //   name: 'male',
+        //   type: 'bar',
+        //   stack: 'total',
+        //   itemStyle: {
+        //     normal: {
+        //       color: 'rgba(0,191,183,1)',
+        //       barBorderRadius: 0,
+        //       label: {
+        //         show: true,
+        //         position: 'top',
+        //         formatter(p) {
+        //           return p.value > 0 ? p.value : ''
+        //         }
+        //       }
+        //     }
+        //   },
+        //   data: [
+        //     327,
+        //     1776,
+        //     507,
+        //     1200,
+        //     800,
+        //     482,
+        //     204,
+        //     1390,
+        //     1001,
+        //     951,
+        //     381,
+        //     220
+        //   ]
+        // }, 
         {
-          name: 'male',
-          type: 'bar',
-          stack: 'total',
-          itemStyle: {
-            normal: {
-              color: 'rgba(0,191,183,1)',
-              barBorderRadius: 0,
-              label: {
-                show: true,
-                position: 'top',
-                formatter(p) {
-                  return p.value > 0 ? p.value : ''
-                }
-              }
-            }
-          },
-          data: [
-            327,
-            1776,
-            507,
-            1200,
-            800,
-            482,
-            204,
-            1390,
-            1001,
-            951,
-            381,
-            220
-          ]
-        }, {
-          name: 'average',
+          name: 'hhkj',
           type: 'line',
           stack: 'total',
           symbolSize: 10,
@@ -288,180 +409,19 @@ export default {
             }
           },
           data: [
-            1036,
-            3693,
-            2962,
-            3810,
-            2519,
-            1915,
-            1748,
-            4675,
-            6209,
-            4323,
-            2865,
-            4298
+            1.0,
+            1,
+            0.5,
+            1,
+            -0.8,
+            1,
+            0.5,
+            1,
+            1
           ]
         }
         ]
       })
-    },
-    initMyChar(){
-        this.mychar = echarts.init(document.getElementById(this.myid))
-        this.mychar.setOption({
-          color: ['#6dd8da', '#b6a2de', '#58afed','#F2637B','#c0392b'],
-          tooltip: {
-              trigger: 'item',
-              formatter: "{a} <br/>{b}: {c} ({d}%)"
-          },
-          title: {
-            text: '政采网',
-            // x 设置水平安放位置，默认左对齐，可选值：'center' ¦ 'left' ¦ 'right' ¦ {number}（x坐标，单位px）
-            x: '10',
-            // y 设置垂直安放位置，默认全图顶端，可选值：'top' ¦ 'bottom' ¦ 'center' ¦ {number}（y坐标，单位px）
-            y: '15',
-            // itemGap设置主副标题纵向间隔，单位px，默认为10，
-            itemGap: 30,
-            // 主标题文本样式设置
-            textStyle: {
-              fontSize: 12,
-              fontWeight: 'bolder',
-              color: '#000080'
-            },
-            // 副标题文本样式设置
-            subtextStyle: {
-              fontSize: 18,
-              color: '#8B2323'
-            }
-          },
-          legend: {
-              orient: 'vertical',
-              x: 'right',
-              y:'center',
-              itemWidth: 24,   // 设置图例图形的宽
-                  itemHeight: 10,  // 设置图例图形的高
-                  textStyle: {
-                    color: '#666'  // 图例文字颜色
-                  },
-                  // itemGap设置各个item之间的间隔，单位px，默认为10，横向布局时为水平间隔，纵向布局时为纵向间隔
-                  itemGap: 10,
-              data:['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
-          },
-          series: [
-              {
-                  name:'访问来源',
-                  type:'pie',
-                  radius: ['60%', '70%'],
-                  avoidLabelOverlap: false,
-                  label: {
-                      normal: {
-                          show: false,
-                          position: 'center'
-                      },
-                      emphasis: {
-                          show: true,
-                          textStyle: {
-                              fontSize: '15',
-                              fontWeight: 'bold'
-                          }
-                      }
-                  },
-                  labelLine: {
-                      normal: {
-                          show: false
-                      },
-                      lineStyle:{
-                          width:10
-                      }
-                  },
-                  data:[
-                      {value:335, name:'直接访问'},
-                      {value:310, name:'邮件营销'},
-                      {value:234, name:'联盟广告'},
-                      {value:135, name:'视频广告'},
-                      {value:1548, name:'搜索引擎'}
-                  ]
-              }
-          ]
-        })
-    },
-    initMyChar1(){
-        this.mychar1 = echarts.init(document.getElementById(this.myid1))
-        this.mychar1.setOption({
-          color: ['#6dd8da', '#b6a2de', '#58afed','#F2637B','#c0392b'],
-          tooltip: {
-              trigger: 'item',
-              formatter: "{a} <br/>{b}: {c} ({d}%)"
-          },
-          title: {
-            text: '政采网',
-            // x 设置水平安放位置，默认左对齐，可选值：'center' ¦ 'left' ¦ 'right' ¦ {number}（x坐标，单位px）
-            x: '10',
-            // y 设置垂直安放位置，默认全图顶端，可选值：'top' ¦ 'bottom' ¦ 'center' ¦ {number}（y坐标，单位px）
-            y: '15',
-            // itemGap设置主副标题纵向间隔，单位px，默认为10，
-            itemGap: 30,
-            // 主标题文本样式设置
-            textStyle: {
-              fontSize: 12,
-              fontWeight: 'bolder',
-              color: '#000080'
-            },
-            // 副标题文本样式设置
-            subtextStyle: {
-              fontSize: 18,
-              color: '#8B2323'
-            }
-          },
-          legend: {
-              orient: 'vertical',
-              x: 'right',
-              y:'center',
-              itemWidth: 24,   // 设置图例图形的宽
-                  itemHeight: 10,  // 设置图例图形的高
-                  textStyle: {
-                    color: '#666'  // 图例文字颜色
-                  },
-                  // itemGap设置各个item之间的间隔，单位px，默认为10，横向布局时为水平间隔，纵向布局时为纵向间隔
-                  itemGap: 10,
-              data:['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
-          },
-          series: [
-              {
-                  name:'访问来源',
-                  type:'pie',
-                  radius: ['60%', '70%'],
-                  avoidLabelOverlap: false,
-                  label: {
-                      normal: {
-                          show: false,
-                          position: 'center'
-                      },
-                      emphasis: {
-                          show: true,
-                          textStyle: {
-                              fontSize: '15',
-                              fontWeight: 'bold'
-                          }
-                      }
-                  },
-                  labelLine: {
-                      normal: {
-                          show: false
-                      },
-                      lineStyle:{
-                          width:10
-                      }
-                  },
-                  data:[
-                      {value:335, name:'直接访问'},
-                      {value:310, name:'邮件营销'},
-                      {value:234, name:'联盟广告'},
-                      {value:135, name:'视频广告'},
-                      {value:1548, name:'搜索引擎'}
-                  ]
-              }
-          ]
-        })
     }
   }
 }
@@ -487,20 +447,55 @@ export default {
     border-radius: 4px;
     min-height: 230px;
   }
-
   .grid-content>div{
-    padding-top:1px;
-    padding-left: 20px;
+    padding-top:3px;
     line-height:normal;
     height: 115px;
     text-align: left;
   }
   .grid-content>div>p{
       line-height:4px;
-      
   }
   .row-bg {
     padding: 10px 0;
     background-color: #f9fafc;
+  }
+  /* table 样式 */
+  .table_box>span{
+    display: inline-block;
+    padding-left:10px;
+    padding-bottom:5px;
+  }
+  .table_box>small{
+    display:block;
+    float: right;
+  }
+  .table_box table{
+    border-collapse: collapse;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .table_box table td, table th{
+    border: 1px solid #cad9ea;
+    color: #666;
+    height: 20px;
+    line-height: 20px;
+  }
+  /* .table_box table thead{
+      display: inline-block;
+  } */
+  .table_box table thead th{
+      background-color: #CCE8EB;
+      width: 100px;
+  }
+  .table_box table tbody tr:hover{
+      background-color: antiquewhite;
+      cursor: pointer;
+  }
+  .table_box table tr:nth-child(odd){
+      background: #fff;
+  }
+  .table_box table tr:nth-child(even){
+      background: #F5FAFA;
   }
 </style>

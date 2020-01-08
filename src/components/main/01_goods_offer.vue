@@ -196,8 +196,6 @@ import { log } from 'util'
               'time':this.searchForm.time[0]+'-'+this.searchForm.time[1],
               'zt'  :this.searchForm.zt
           });
-          
-          console.log(postData)
           this.axios.post('api/mess_search',postData).then((res)=>{
               if(res.data.result.length==0){
                   this.$message.error('没有查询到任何数据');
@@ -207,7 +205,6 @@ import { log } from 'util'
                   this.tableData=res.data.result
                   this.totalPage=res.data.total_page
               }
-              
           }).catch((err)=>{
               this.$notify.error({
                 title: '错误',

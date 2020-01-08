@@ -1,19 +1,4 @@
-<template>
-    <h1>00000</h1>
-</template>
-<script>
-export default {
-    data(){
-        return{}
-    },
-    mounted(){
-
-    },
-    methods:{
-        
-    }
-}
-</script>
-<style scoped>
-
-</style>
+成交日期
+成交时间
+证券代码
+证券名称        买卖标志        买卖标志        委托价格        委托数量        委托编号        成交价格        成交数量        成交金额        成交编号        股 东代码  帐号类别        状态说明        交易所名称      备注    撤单标志        句柄    保留信息
