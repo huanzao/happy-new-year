@@ -1,15 +1,6 @@
 <template>
   <div>
-    <div style="padding:20px;background:#fff;position:relative">
-            <div style="position: absolute;right: 10px;z-index: 22;">
-                <p style="display:inline-block">账号：</p>
-                <el-select v-model="Account" size="mini" filterable style="width:180px">
-                    <el-option :label="item.name+'--'+item.ac_zj_Account" :value="item.ac_zj_Account" v-for="(item,key) in AccountList" :key='key'></el-option>
-                </el-select>
-                <el-tooltip class="item"  v-if='activeName!=0'  effect="dark" content="关闭" placement="bottom-end">
-                    <el-button size="mini" type='danger' icon="el-icon-close"  @click="activeName=''"></el-button>
-                </el-tooltip>
-            </div>
+    <div style="padding:20px;background:#fff;">
             <el-tabs v-model="activeName" @tab-click="handleClick" style="">
               <el-tab-pane label="当日资金查询数据" name="first">
                   <template>
@@ -27,18 +18,6 @@
                         <el-table-column prop='k' label="句柄"></el-table-column>
                         <el-table-column prop='l' label="保留信息"></el-table-column>
                     </el-table>
-                    <div class="block" style="height:32px">
-                        <el-pagination
-                        style="height:50px"
-                          @size-change="handleSizeChange($event,'api/People/ShowPeople')"
-                          @current-change="handleCurrentChange($event,'api/People/ShowPeople')"
-                          :current-page="currentPage1"
-                          :page-sizes="[10, 20, 50, 100]"
-                          :page-size="10"
-                          layout="total, sizes, prev, pager, next, jumper"
-                          :total="totalpage1">
-                        </el-pagination>
-                    </div>
                   </template>
               </el-tab-pane>
               <el-tab-pane label="当日持仓数据" name="second">
@@ -63,18 +42,6 @@
                         <el-table-column prop="q" label="句柄"></el-table-column>
                         <el-table-column prop="r" label="保留信息"></el-table-column>
                     </el-table>
-                    <div class="block" style="height:32px">
-                        <el-pagination
-                        style="height:50px"
-                          @size-change="handleSizeChange($event,'api/People/ShowPeople')"
-                          @current-change="handleCurrentChange($event,'api/People/ShowPeople')"
-                          :current-page="currentPage2"
-                          :page-sizes="[10, 20, 50, 100]"
-                          :page-size="10"
-                          layout="total, sizes, prev, pager, next, jumper"
-                          :total="totalpage2">
-                        </el-pagination>
-                    </div>
                   </template>         
               </el-tab-pane>
               <el-tab-pane label="当日可撤订单数据" name="fiveth">
@@ -100,18 +67,6 @@
                       <el-table-column prop="r" label="句柄"></el-table-column>
                       <el-table-column prop="s" label="保留信息"></el-table-column>
                     </el-table>
-                    <div class="block" style="height:32px">
-                      <el-pagination
-                      style="height:50px"
-                        @size-change="handleSizeChange($event,'api/People/ShowPeople')"
-                        @current-change="handleCurrentChange($event,'api/People/ShowPeople')"
-                        :current-page="currentPage3"
-                        :page-sizes="[10, 20, 50, 100]"
-                        :page-size="10"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="totalpage3">
-                      </el-pagination>
-                  </div>
                   </template>  
               </el-tab-pane>
             </el-tabs>
@@ -143,7 +98,7 @@ export default {
   },
   data() {
     return {
-      activeName:0, 
+      activeName:'first', 
       AccountList:[],
       Account:'',
       chart: null,
@@ -151,12 +106,6 @@ export default {
       table_cx:[],
       tableData:[],
       table_chicang:[],
-      currentPage1:10,
-      totalpage1:10,
-      currentPage2:10,
-      totalpage2:10,
-      currentPage3:10,
-      totalpage3:10,
     }
   },
   mounted() {
@@ -180,13 +129,6 @@ export default {
     req_AccountList,
     table_req,
     handleClick(tab) {
-          if(this.Account==""){
-               this.$message({
-                  message: '请先选择账号',
-                  type: 'warning'
-                });
-              return  
-          }
           switch(this.activeName) {
               case 'first':
                       this.table_req('api/Bond/ShowCapital',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'sraech')
@@ -195,9 +137,7 @@ export default {
                       this.table_req('api/Bond/ShowTodayHolder',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'cc') 
                   break;
               case 'fiveth':
-                  if(this.table_cx.length===0){
                       this.table_req('api/Bond/ShowCd',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'cx')
-                  }
                   break; 
               default:
           }
@@ -214,7 +154,7 @@ export default {
       this.chart.setOption({
         backgroundColor: '#344b58',
         title: {
-          text: '股票走势',
+          text: '资金走势',
           x: '20',
           top: '10',
           textStyle: {
@@ -427,8 +367,7 @@ export default {
 }
 </script>
 <style scoped>
-
-   .el-row {
+  .el-row {
     margin-bottom: 20px;
   }
   .el-col {

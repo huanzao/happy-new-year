@@ -129,6 +129,11 @@ const router= new Router({
           component: ()=>import('@/components/main/Adatabase/keys.vue')
         },
         {
+          path: 'tt',               
+          name: 'tt',
+          component: ()=>import('@/components/main/000.vue')
+        },
+        {
           path: 'goods',               //商品报价
           name: 'goods',
           component: ()=>import('@/components/main/00_goods.vue'), 

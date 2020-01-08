@@ -4,18 +4,25 @@
             <span>系统设置</span>
         </div>
         <div style="padding:15px;background:#fff;margin-top:30px;padding-top:5px">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tabs v-model="activeName" @tab-click="handleClick" >
                 <el-tab-pane label="策略设置" name="first">
-                        <el-table :data="tableData" style="width: 100%;">
-                            <el-table-column label="券商ID" width="180" prop="q_Id"></el-table-column>
-                            <el-table-column label="券商名称" width="180" prop="name"></el-table-column>
-                            <el-table-column label="IP/端口" width="180" >
+                        <el-table :data="tableData" style="width: 100%;" :row-class-name="tableRowClassName">
+                            <el-table-column label="TS代码" prop="ts"></el-table-column>
+                            <el-table-column label="股票名称" prop="name"></el-table-column>
+                            <el-table-column label="股票代码" prop="dm" ></el-table-column>
+                            <el-table-column label="买入时价格" prop="buyPrice"></el-table-column>
+                            <el-table-column label="现在市场价" prop="nowPrice"></el-table-column>
+                            <el-table-column
+                                prop="tag"
+                                label="盈亏"
+                                width="100"
+                                :filters="[{ text: '亏损', value: '亏损' },{ text: '盈利', value: '盈利' },{ text: '无变化', value: '无变化' }]"
+                                :filter-method="filterTag"
+                                filter-placement="bottom-end">
                                 <template slot-scope="scope">
-                                    <span >{{ scope.row.ip+':'+scope.row.port }}</span>
+                                    <span>{{scope.row.nowPrice-scope.row.buyPrice}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="客户端版本" width="180" prop="clientVersion"></el-table-column>
-                            <el-table-column label="创建时间" width="180" prop="createtime"></el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
                                     <el-button size="mini" type="success" @click="tactics(scope.row)">策略</el-button>
@@ -23,18 +30,6 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <div class="block" style="height:32px">
-                            <el-pagination
-                            style="height:50px"
-                            @size-change="handleSizeChange($event,'api/Bond/ShowCo')"
-                            @current-change="handleCurrentChange($event,'api/Bond/ShowCo')"
-                            :current-page="currentPage"
-                            :page-sizes="[10, 20, 50, 100]"
-                            :page-size="10"
-                            layout="total, sizes, prev, pager, next, jumper"
-                            :total="totalpage">
-                            </el-pagination>
-                        </div>   
                 </el-tab-pane>
                 <el-tab-pane label="时间设置" name="second">
                     <el-card class="box-card" shadow="always" style="width:50%;margin:10px">
@@ -43,7 +38,7 @@
                             <el-button style="float: right; padding: 3px 0;margin:-8px" type="text"  @click="setTime_show(0)">修改</el-button>
                         </div>
                         <div>
-                            <span>每天 {{searchData.buyTime[0]+'-'+searchData.buyTime[1]}}</span>  
+                            <span>每天 {{searchData.buyTime}}</span>  
                         </div>
                     </el-card>
                     <el-card class="box-card" shadow="always" style="width:50%;margin:10px">
@@ -52,7 +47,7 @@
                             <el-button style="float: right; padding: 3px 0;margin:-8px" type="text"  @click="setTime_show(1)">修改</el-button>
                         </div>
                         <div class="text item" style="line-height:20px">
-                            <span>每天  {{searchData.sellTime[0]+'-'+searchData.sellTime[1]}}</span> 
+                            <span>每天  {{searchData.sellTime}}</span> 
                         </div>
                     </el-card>
                 </el-tab-pane>
@@ -62,13 +57,10 @@
         <el-dialog class="myDialog" title="时间设置" :visible.sync="setTime">
             <el-form>
                 <el-form-item  :label="setTime_tile" :label-width="formLabelWidth">
-                    <el-time-picker is-range
+                    <el-time-picker 
                         v-model="dialog_time"
                         value-format="HH:mm:ss"
                         size="mini"
-                        range-separator="至"
-                        start-placeholder="开始时间"
-                        end-placeholder="结束时间"
                         placeholder="选择时间范围">
                     </el-time-picker>
                 </el-form-item>
@@ -106,16 +98,12 @@
     </div>
 </template>
 <script>
-import {myInit,handleSizeChange,handleCurrentChange} from '../../assets/comon'
+import {myInit} from '../../assets/comon'
 import {mySell} from '../../assets/myaxios'
 export default {
     data() {
       return {
         activeName:"first",
-        currentPage:1,
-        pagesize:10,
-        totalpage:0, 
-
         setTime: false,
         time_witch:0,
         setTactics:false,
@@ -124,14 +112,40 @@ export default {
         celueTitle:'',
         dialog_time:'',
         searchData: {
-            buyTime:['09:30:00','09:31:00'],
-            sellTime:['09:25:00','09:26:00']
+            buyTime:'09:30:00',
+            sellTime:'09:26:00'
         },
         celueData:{
             section:'',
         },
         formLabelWidth: '120px',  
-        tableData: [],
+        tableData: [
+            {
+                ts:'10068',
+                name:'中国移动',
+                dm:'移动-10086',
+                buyPrice:'250',
+                nowPrice:'280',
+                tag:'盈利'
+            },
+            {
+                ts:'10010',
+                name:'中国联通',
+                dm:'联通-10010',
+                buyPrice:'250',
+                nowPrice:'230',
+                tag:'亏损'
+            },
+            {
+                ts:'12345',
+                name:'中国电信',
+                dm:'电信-12345',
+                buyPrice:'250',
+                nowPrice:'250',
+                tag:'无变化'
+            }
+
+        ],
         options: [
             {
                 label: '0-10',
@@ -157,13 +171,22 @@ export default {
       }
     },
     mounted(){
-      this.myInit('api/Bond/ShowCo',{IndexPage:"1",PageSize:"10"})
+    //   this.myInit('api/Bond/ShowCo',{IndexPage:"1",PageSize:"10"})
     },
     methods:{
       mySell,  
       myInit,
-      handleSizeChange,
-      handleCurrentChange,
+      tableRowClassName({row, rowIndex}) {
+        if (row.buyPrice*1<row.nowPrice*1) {
+          return 'success-row';
+        } else if (row.buyPrice*1>row.nowPrice*1) {
+          return 'warning-row';
+        }
+        return 'primary-row';
+      },
+      filterTag(value, row) {
+        return row.tag === value;
+      },
       tactics(row){
           this.celueTitle=row.name+'股票策略修改'
           this.setTactics=true
@@ -198,4 +221,14 @@ export default {
   }
 </script>
 <style>
+    .el-table .warning-row td:not(:last-child) {
+        color: #F56C6C ;
+    }
+    .el-table .success-row  td:not(:last-child){
+        color: #67C23A ;
+    }
+    .el-table .primary-row  td:not(:last-child){
+        color: #409EFF ;
+    }
 </style>
+td
