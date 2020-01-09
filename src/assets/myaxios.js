@@ -72,9 +72,8 @@ export function table_req(url,params,type){
 }
 
 //全局删除操作
-export function mySell(index, text,params,url,showurl){
-    console.log(index,params,'我自己的删除方法');
-    this.$confirm(`确定出售${text}股票吗?`, '提示', {
+export function mySell(index, text,params,url){
+    this.$confirm(`确定就出售${text}股票吗?`, '提示', {
       cancelButtonText: '取消',
       confirmButtonText: '确定',
       type: 'warning'
@@ -100,27 +99,11 @@ export function mySell(index, text,params,url,showurl){
               type: 'warning'
             });
           }else{
-            if(this.tableData.length===1){
-              var key={IndexPage:this.currentPage-1,PageSize:this.pagesize}
-              this.axios({
-                method: 'post',
-                headers:{'Authorization':'Bearer '+localStorage.token},
-                url: showurl,
-                data:this.$qs.stringify(key)
-              }).then((res)=>{
-                  loading.close()
-                  this.tableData=res.data.result
-                  this.totalpage=res.data.totalpage
-              })
-          }else{
-            this.totalpage=this.totalpage*1-1
-          }
-          this.tableData.splice(index,1);
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          console.log('****',this.totalpage,typeof(this.totalpage))
+            this.tableData.splice(index,1);
+            this.$message({
+              type: 'success',
+              message: '出售成功!'
+            })
           }
       }).catch((err)=>{
           loading.close()

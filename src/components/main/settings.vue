@@ -10,9 +10,14 @@
                             <el-table-column label="TS代码" prop="ts"></el-table-column>
                             <el-table-column label="股票名称" prop="name"></el-table-column>
                             <el-table-column label="股票代码" prop="dm" ></el-table-column>
-                            <el-table-column label="买入时价格" prop="buyPrice"></el-table-column>
-                            <el-table-column label="现在市场价" prop="nowPrice"></el-table-column>
-                            <el-table-column
+                            <el-table-column label="开盘价/买入价" width="120" prop="buyPrice"></el-table-column>
+                            <el-table-column label="最高价" prop="high"></el-table-column>
+                            <el-table-column label="最低价" prop="low"></el-table-column>
+                            <el-table-column label="收盘价/现价" prop="nowPrice"></el-table-column>
+                            <el-table-column label="成交量" prop="cj_num"></el-table-column>
+                            <el-table-column label="成交额" prop="cj_price"></el-table-column>
+                            <el-table-column label="涨幅" prop="zf"></el-table-column>
+                            <el-table-column 
                                 prop="tag"
                                 label="盈亏"
                                 width="100"
@@ -23,7 +28,7 @@
                                     <span>{{scope.row.nowPrice-scope.row.buyPrice}}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="操作">
+                            <el-table-column label="操作" width="160">
                                 <template slot-scope="scope">
                                     <el-button size="mini" type="success" @click="tactics(scope.row)">策略</el-button>
                                     <el-button size="mini" type="warning" @click="mySell(scope.$index,scope.row.name,{RoleId:scope.row.id},'','')">出售</el-button>
@@ -92,7 +97,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button size="mini" @click="setTactics = false">取 消</el-button>
-                <el-button size="mini" type="primary" >确 定</el-button>
+                <el-button size="mini" type="primary" @click='do_setting' >确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -126,7 +131,16 @@ export default {
                 dm:'移动-10086',
                 buyPrice:'250',
                 nowPrice:'280',
-                tag:'盈利'
+                tag:'盈利',
+                num:13.291,
+                high:100,
+                low:12,
+                start:23,
+                end:160,
+                cj_num:645413,
+                cj_price:54565,
+                zf:'12%',
+
             },
             {
                 ts:'10010',
@@ -134,7 +148,15 @@ export default {
                 dm:'联通-10010',
                 buyPrice:'250',
                 nowPrice:'230',
-                tag:'亏损'
+                tag:'亏损',
+                num:13.291,
+                high:100,
+                low:12,
+                start:23,
+                end:160,
+                cj_num:645413,
+                cj_price:54565,
+                zf:'32%',
             },
             {
                 ts:'12345',
@@ -142,7 +164,15 @@ export default {
                 dm:'电信-12345',
                 buyPrice:'250',
                 nowPrice:'250',
-                tag:'无变化'
+                tag:'无变化',
+                num:13.291,
+                high:100,
+                low:12,
+                start:23,
+                end:160,
+                cj_num:645413,
+                cj_price:54565,
+                zf:'25%',
             }
 
         ],
@@ -192,8 +222,13 @@ export default {
           this.setTactics=true
           console.log(row)
       },
+      do_setting(){
+          console.log('提交设置')
+          this.setTactics=false
+      },
       tactics_upload(){
           this.setTactics=false
+          console.log('设置')
       },
       handleClick(){
           console.log('切换')

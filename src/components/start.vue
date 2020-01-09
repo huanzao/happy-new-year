@@ -43,7 +43,7 @@
                         console.log(res)
                         localStorage.token=res.data.token
                         localStorage.user=this.ruleForm.Account
-                        if(res.data.success==0){
+                        if(res.data.response==="fail"){
                             this.$message.error("用户名或密码错误");
                         }else{       
                             this.$router.push('/main/echarts')
