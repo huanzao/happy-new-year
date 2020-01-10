@@ -124,6 +124,21 @@ const router= new Router({
           component: ()=>import('@/components/main/settings.vue')
         },
         {
+          path: 'set_add',               
+          name: 'set_add',
+          component: ()=>import('@/components/main/set_add.vue')
+        },
+        {
+          path: 'set_show',               
+          name: 'set_show',
+          component: ()=>import('@/components/main/settings_show.vue')
+        },
+        {
+          path: 'set_edit',               
+          name: 'set_edit',
+          component: ()=>import('@/components/main/set_edit.vue')
+        },
+        {
           path: 'key',               
           name: 'key',
           component: ()=>import('@/components/main/Adatabase/keys.vue')
@@ -148,7 +163,6 @@ const router= new Router({
           name: 'goods_offer',
           component: ()=>import('@/components/main/01_goods_offer.vue'), 
         },
-
         {
           path: 'goods_offer_add',
           name: 'goods_offer_add',

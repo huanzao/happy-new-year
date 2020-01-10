@@ -59,6 +59,9 @@
           <router-link class='mymain_router' to="/main/settings">
               <el-menu-item index="2-15"><i class="el-icon-paperclip"></i>系统设置</el-menu-item>
           </router-link>
+          <router-link class='mymain_router' to="/main/set_show">
+              <el-menu-item index="2-16"><i class="el-icon-paperclip"></i>设置展示</el-menu-item>
+          </router-link>
         </el-menu-item-group>
       </el-submenu>
      
