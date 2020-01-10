@@ -76,7 +76,7 @@
 </template>
 <script>
 import echarts from 'echarts'
-import {req_AccountList,table_req} from '../../../assets/myaxios'
+import {table_req} from '../../../assets/myaxios'
 export default {
   props: {
     className: {
@@ -109,8 +109,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.activeName)
-    this.req_AccountList()
+    this.table_req('api/Bond/ShowCapital',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'sraech')
     // this.timer=setInterval(()=>{
     //       console.log('5000定时器')
     //   },2000)
@@ -126,7 +125,6 @@ export default {
     this.timer = null
   },
   methods: {
-    req_AccountList,
     table_req,
     handleClick(tab) {
           switch(this.activeName) {
@@ -211,7 +209,6 @@ export default {
           },
           axisLabel: {
             interval: 0
-
           },
           data: xData
         }],

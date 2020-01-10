@@ -39,6 +39,15 @@
                 <el-tab-pane label="时间设置" name="second">
                     <el-card class="box-card" shadow="always" style="width:50%;margin:10px">
                         <div slot="header" class="clearfix">
+                            <span>获取买入价格时间</span>
+                            <el-button style="float: right; padding: 3px 0;margin:-8px" type="text"  @click="setTime_show(2)">修改</el-button>
+                        </div>
+                        <div>
+                            <span>每天 {{searchData.buyTime_Hq}}</span>  
+                        </div>
+                    </el-card>
+                    <el-card class="box-card" shadow="always" style="width:50%;margin:10px">
+                        <div slot="header" class="clearfix">
                             <span>买入时间</span>
                             <el-button style="float: right; padding: 3px 0;margin:-8px" type="text"  @click="setTime_show(0)">修改</el-button>
                         </div>
@@ -48,7 +57,16 @@
                     </el-card>
                     <el-card class="box-card" shadow="always" style="width:50%;margin:10px">
                         <div slot="header" class="clearfix">
-                            <span>出售时间</span>
+                            <span>获取卖出价格时间</span>
+                            <el-button style="float: right; padding: 3px 0;margin:-8px" type="text"  @click="setTime_show(3)">修改</el-button>
+                        </div>
+                        <div class="text item" style="line-height:20px">
+                            <span>每天  {{searchData.sellTime_Hq}}</span> 
+                        </div>
+                    </el-card>
+                    <el-card class="box-card" shadow="always" style="width:50%;margin:10px">
+                        <div slot="header" class="clearfix">
+                            <span>卖出时间</span>
                             <el-button style="float: right; padding: 3px 0;margin:-8px" type="text"  @click="setTime_show(1)">修改</el-button>
                         </div>
                         <div class="text item" style="line-height:20px">
@@ -78,19 +96,24 @@
 
         <el-dialog class="myDialog" :title="celueTitle" :visible.sync="setTactics">
             <el-form :model="celueData">
-                <el-form-item label="区间选择" :label-width="formLabelWidth">
+                <el-form-item label="买入价" :label-width="formLabelWidth">
                     <el-select v-model="celueData.section" size='mini' placeholder="请选择">
-                        <el-option-group
-                        v-for="group in options"
-                        :key="group.label"
-                        :label="group.label">
                         <el-option
-                            v-for="item in group.options"
+                            v-for="item in buy_option"
                             :key="item.value"
-                            :label="item.label"
+                            :label="item.name+':  '+item.value"
                             :value="item.value">
                         </el-option>
-                        </el-option-group>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="卖出价" :label-width="formLabelWidth">
+                    <el-select v-model="celueData.section" size='mini' placeholder="请选择">
+                        <el-option
+                            v-for="item in buy_option"
+                            :key="item.value"
+                            :label="item.name+':  '+item.value"
+                            :value="item.value">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                
@@ -117,13 +140,15 @@ export default {
         celueTitle:'',
         dialog_time:'',
         searchData: {
+            buyTime_Hq:'09:30:00',
             buyTime:'09:30:00',
+            sellTime_Hq:'09:26:00',
             sellTime:'09:26:00'
         },
         celueData:{
             section:'',
         },
-        formLabelWidth: '120px',  
+        formLabelWidth: '150px',  
         tableData: [
             {
                 ts:'10068',
@@ -176,6 +201,13 @@ export default {
             }
 
         ],
+        buy_option:[
+            {name:'一档',value:5.01},
+            {name:'二档',value:5.02},
+            {name:'三档',value:5.03},
+            {name:'四档',value:5.04},
+            {name:'五档',value:5.05},
+        ],
         options: [
             {
                 label: '0-10',
@@ -206,6 +238,7 @@ export default {
     methods:{
       mySell,  
       myInit,
+      //亏损盈利颜色判断函数
       tableRowClassName({row, rowIndex}) {
         if (row.buyPrice*1<row.nowPrice*1) {
           return 'success-row';
@@ -214,25 +247,70 @@ export default {
         }
         return 'primary-row';
       },
+      //筛选函数
       filterTag(value, row) {
         return row.tag === value;
       },
+      //策略 dialog 弹出函数
       tactics(row){
           this.celueTitle=row.name+'股票策略修改'
           this.setTactics=true
           console.log(row)
       },
+      //策略提交函数
       do_setting(){
-          console.log('提交设置')
-          this.setTactics=false
+            console.log('提交设置')
+            this.setTactics=false
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
+            let updata=this.celueData
+            console.log('添加或修改提交的信息',updata)
+            this.axios({
+                method: 'post',
+                headers:{
+                    'Authorization':'Bearer '+localStorage.token
+                },
+                timeout:5000,
+                url: 'aaa',
+                data:this.$qs.stringify(updata)
+            }).then((res)=>{
+                console.log('res11111111',res)
+                loading.close()
+                if(res.data.response==="success"){
+                    this.$message({
+                        message: res.data.results,
+                        type: 'success'
+                    });
+                    setTimeout(()=>{
+                        window.history.go(-1)
+                    },1000)
+                }else{
+                    this.$message({
+                        message: res.data.results,
+                        type: 'warning'
+                    });
+                }
+            }).catch((err)=>{
+                console.log('error0000000',err)
+                loading.close()
+                this.$notify.error({
+                    title: '登录过期',
+                    message: '请重新登陆'
+                });
+                setTimeout(()=>{
+                    this.$router.push('/')
+                },1000)
+            })
       },
-      tactics_upload(){
-          this.setTactics=false
-          console.log('设置')
-      },
+      //tab栏切换函数
       handleClick(){
           console.log('切换')
       },
+      //时间设置弹出函数
       setTime_show(type){
           if(type===0){
                 this.setTime_tile='买入时间'
@@ -240,17 +318,73 @@ export default {
           }else if(type===1){
                 this.dialog_time=this.searchData.sellTime
                 this.setTime_tile='出售时间'
+          }else if(type===2){
+                this.dialog_time=this.searchData.sellTime
+                this.setTime_tile='获取买入价格时间'
+          }else if(type===3){
+                this.dialog_time=this.searchData.sellTime
+                this.setTime_tile='获取卖出价格时间'
           }
           this.setTime=true
       },
+      //时间设置提交函数
       globle_setTime(){
-          if(this.setTime_tile==='买入时间'){
+            if(this.setTime_tile==='买入时间'){
               this.searchData.buyTime=this.dialog_time
-          }else if(this.setTime_tile==='出售时间'){
+            }else if(this.setTime_tile==='出售时间'){
               this.searchData.sellTime=this.dialog_time
-          }
-          this.setTime=false
-          console.log(this.searchData)
+            }else if(this.setTime_tile==='获取买入价格时间'){
+              this.searchData.buyTime_Hq=this.dialog_time
+            }else if(this.setTime_tile==='获取卖出价格时间'){
+              this.searchData.sellTime_Hq=this.dialog_time
+            }
+            this.setTime=false
+            console.log(this.searchData)
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
+            let updata=this.searchData
+            console.log('添加或修改提交的信息',updata)
+            this.axios({
+                method: 'post',
+                headers:{
+                    'Authorization':'Bearer '+localStorage.token
+                },
+                timeout:5000,
+                url: 'bbb',
+                data:this.$qs.stringify(updata)
+            }).then((res)=>{
+                console.log('res11111111',res)
+                loading.close()
+                if(res.data.response==="success"){
+                    this.$message({
+                        message: res.data.results,
+                        type: 'success'
+                    });
+                    setTimeout(()=>{
+                        window.history.go(-1)
+                    },1000)
+                }else{
+                    this.$message({
+                        message: res.data.results,
+                        type: 'warning'
+                    });
+                }
+            }).catch((err)=>{
+                console.log('error0000000',err)
+                loading.close()
+                this.$notify.error({
+                    title: '登录过期',
+                    message: '请重新登陆'
+                });
+                setTimeout(()=>{
+                    this.$router.push('/')
+                },1000)
+            })
+
       }
     }
   }

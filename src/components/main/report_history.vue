@@ -213,7 +213,7 @@
               <el-tab-pane label="历史交割单" name="sixth">
                   <template>
                     <el-table :data="table_jg" height="500" style="width: 100%">
-                        <el-table-column prop="a" label="交割日期"></el-table-column>
+                        <el-table-column prop="a" label="交割日期" width="100"></el-table-column>
                         <el-table-column prop="b" label="业务名称"></el-table-column>
                         <el-table-column prop="c" label="证券代码"></el-table-column>
                         <el-table-column prop="d" label="证券名称"></el-table-column>
@@ -231,8 +231,8 @@
                         <el-table-column prop="p" label="交易所规费" width="120"></el-table-column>
                         <el-table-column prop="q" label="附加费"></el-table-column>
                         <el-table-column prop="r" label="币种"></el-table-column>
-                        <el-table-column prop="s" label="成交编号"></el-table-column>
-                        <el-table-column prop="t" label="股东代码"></el-table-column>
+                        <el-table-column prop="s" label="成交编号" width="120"></el-table-column>
+                        <el-table-column prop="t" label="股东代码" width="120"></el-table-column>
                         <el-table-column prop="u" label="帐号类别"></el-table-column>
                         <el-table-column prop="v" label="资金帐号" width="120"></el-table-column>
                         <el-table-column prop="w" label="句柄" width="100"></el-table-column>
