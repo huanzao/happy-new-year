@@ -119,7 +119,7 @@ const router= new Router({
           component: ()=>import('@/components/main/shares_add.vue'),
         },
         {
-          path: 'settings',               
+          path: 'settings/:id',               
           name: 'settings',
           component: ()=>import('@/components/main/settings.vue')
         },
@@ -137,6 +137,16 @@ const router= new Router({
           path: 'set_edit',               
           name: 'set_edit',
           component: ()=>import('@/components/main/set_edit.vue')
+        },
+        {
+          path: 'set_time_add',               
+          name: 'set_time_add',
+          component: ()=>import('@/components/main/set_time_add.vue')
+        },
+        {
+          path: 'set_time_edit',               
+          name: 'set_time_edit',
+          component: ()=>import('@/components/main/set_time_edit.vue')
         },
         {
           path: 'key',               

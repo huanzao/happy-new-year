@@ -4,7 +4,6 @@
             <router-link class='mymain_router' to="/main/echarts">
               <h5 style="height: 61px;line-height: 61px;;color:#fff;background-color:#353535;margin:0;border-bottom: 1px solid #202020;font-size: 21px;">  管理系统</h5>
             </router-link>
-            
         <el-col>
     <el-menu
       default-active="2"
@@ -56,11 +55,8 @@
           <router-link class='mymain_router' to="/main/shares_select">
               <el-menu-item index="2-14"><i class="el-icon-paperclip"></i>选股</el-menu-item>
           </router-link>
-          <router-link class='mymain_router' to="/main/settings">
+          <router-link class='mymain_router' to="/main/settings/1">
               <el-menu-item index="2-15"><i class="el-icon-paperclip"></i>系统设置</el-menu-item>
-          </router-link>
-          <router-link class='mymain_router' to="/main/set_show">
-              <el-menu-item index="2-16"><i class="el-icon-paperclip"></i>设置展示</el-menu-item>
           </router-link>
         </el-menu-item-group>
       </el-submenu>
@@ -369,10 +365,11 @@ export default {
       width: 100px;
     }
     /* select 插件的样式 */
-    .el-select,.el_select>.el_input{
+    .el-select,.el_select>.el_inputm,.el-date-editor.el-input{
       width: 100%
     }
-   
+    
+
 
     .el-dialog__header{ /* 弹出框标题样式 */
         text-align: left

@@ -30,6 +30,11 @@
             <el-form-item label="资金账号" prop="ZijinAccount">
                 <el-input v-model="ruleForm.ZijinAccount"  size="mini" ></el-input>
             </el-form-item>
+            <el-form-item label="策略">
+                <el-select v-model="watct_set" size="mini" >
+                  <el-option :label="item.name" :value="item.id" v-for="(item,key) in this.$route.params.options" :key='key'></el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="备注" prop="Comments">
                 <el-input v-model="ruleForm.Comments" type="textarea" size="mini" ></el-input>
             </el-form-item>
@@ -62,8 +67,11 @@ export default {
             QuanShangSlect:[],
             people_options:[],
             watch_qs:[],
+            watct_set:'',
+            watch_set_num:0,
             watch_qs_num:0,
             ruleForm:{
+              set_id:'',
               UserId:'',
               Q_Id:'',
               Ac_Id:'',
@@ -113,9 +121,18 @@ export default {
 
             this.ruleForm.QuanshangId=this.QuanShangSlect[value].q_Id
             this.ruleForm.Q_Id=this.QuanShangSlect[value].id
+        },
+        watct_set:function(value){
+            if(this.watch_set_num===0){
+                this.watch_set_num=1
+            }else{
+                this.ruleForm.set_id=value
+            }
         }
     },
     mounted(){
+        console.log(this.$route.params)
+
         this.watch_qs=this.$route.params.row.bondname
         this.ruleForm.UserId=this.$route.params.row.userid
         this.ruleForm.Q_Id=this.$route.params.row.qid
@@ -130,6 +147,8 @@ export default {
         this.ruleForm.Comments=this.$route.params.row.remark
         this.ruleForm.ZijinAccount=this.$route.params.row.zijinAccount
         this.ruleForm.Ac_Id=this.$route.params.row.acId
+        this.ruleForm.set_id=this.$route.params.row.set_id
+        this.watct_set=this.$route.params.row.set_name
 
         this.axios({
           method: 'post',

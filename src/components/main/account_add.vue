@@ -4,7 +4,6 @@
           <el-divider></el-divider>
         <div style="width:60%;padding:20px 0 20px 0">
         <el-form :model="ruleForm"  :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-           
             <el-form-item label="用户">
                 <el-select v-model="ruleForm.UserId" size="mini" style="width:100%" filterable placeholder="请选择">
                     <el-option v-for="(item,key) in people_options" :key="key" :label="item.username" :value="item.userid"></el-option>
@@ -19,7 +18,7 @@
             <el-form-item label="种类" prop="Cat">
                 <el-input v-model="ruleForm.Cat" size="mini" ></el-input>
             </el-form-item>
-            <el-form-item label="券商" >
+            <el-form-item label="券商">
                 <el-select v-model="watch_qs" size="mini" >
                   <el-option :label="item.name" :value="key" v-for="(item,key) in QuanShangSlect" :key='key'></el-option>
                 </el-select>
@@ -29,6 +28,11 @@
             </el-form-item>
             <el-form-item label="资金账号" prop="ZijinAccount">
                 <el-input v-model="ruleForm.ZijinAccount"  size="mini" ></el-input>
+            </el-form-item>
+            <el-form-item label="策略">
+                <el-select v-model="ruleForm.set_id" size="mini" >
+                  <el-option :label="item.name" :value="item.id" v-for="(item,key) in this.$route.params.options" :key='key'></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="备注" prop="Comments">
                 <el-input v-model="ruleForm.Comments" type="textarea" size="mini" ></el-input>
@@ -70,6 +74,7 @@ export default {
             people_options:[],
             watch_qs:'',
             ruleForm:{
+              set_id:'',
               UserId:'',
               QId:'',
               Account:"",
@@ -120,6 +125,8 @@ export default {
         }
     },
     mounted(){
+        console.log(this.$route.params)
+
          this.axios({
           method: 'post',
           headers:{'Authorization':'Bearer '+localStorage.token},

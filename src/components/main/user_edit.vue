@@ -75,18 +75,12 @@ export default {
             },
         }
     },
+    watch:{
+        watch_role:function(){
+          
+        }
+    },
     mounted(){
-        
-        this.ruleForm.Id=this.$route.params.row.peopleid
-        this.ruleForm.Account=this.$route.params.row.account
-        this.ruleForm.Username=this.$route.params.row.username
-        this.ruleForm.Phone=this.$route.params.row.phone
-        this.ruleForm.Tel=this.$route.params.row.tel
-        this.ruleForm.Email=this.$route.params.row.email
-        this.ruleForm.Roleid=this.$route.params.row.roleid
-        this.ruleForm.Remark=this.$route.params.row.remark
-
-
         console.log('编辑传参',this.ruleForm)
         this.axios({
           method: 'post',
@@ -104,6 +98,15 @@ export default {
               this.$router.push('/')
             },1000)
         })
+
+        this.ruleForm.Id=this.$route.params.row.peopleid
+        this.ruleForm.Account=this.$route.params.row.account
+        this.ruleForm.Username=this.$route.params.row.username
+        this.ruleForm.Phone=this.$route.params.row.phone
+        this.ruleForm.Tel=this.$route.params.row.tel
+        this.ruleForm.Email=this.$route.params.row.email
+        this.ruleForm.Roleid=this.$route.params.row.roleid
+        this.ruleForm.Remark=this.$route.params.row.remark
     },
     methods:{
       addUpload,

@@ -7,20 +7,18 @@
             </el-tooltip>
         </div>
         <div>
-        <el-table
-    :data="tableData"
-    style="width: 100%;">
-        <el-table-column label="策略名称" width="180" prop="name"></el-table-column>
-        <el-table-column label="买入时间" width="180" prop="howbuy"></el-table-column>
-        <el-table-column label="卖出时间" width="180" prop="howsale"></el-table-column>
-        <el-table-column label="备注" width="180" prop="bz"></el-table-column>
-        <el-table-column label="操作">
-        <template slot-scope="scope">
-            <el-button size="mini" @click="myEdit(scope.row,'set_edit')">编辑</el-button>
-            <el-button size="mini" type="danger" @click="myDelete(scope.$index,'策略-'+scope.row.name,{se_id:scope.row.id},'api/Settings/Delete','api/Settings/Show')">删除</el-button>
-        </template>
-        </el-table-column>
-  </el-table>
+        <el-table :data="tableData" style="width: 100%;">
+              <el-table-column label="策略名称" width="180" prop="seName"></el-table-column>
+              <el-table-column label="买几价" width="180" prop="howbuy" :formatter='buy'></el-table-column>
+              <el-table-column label="卖几价" width="180" prop="howsale" :formatter="sale"></el-table-column>
+              <el-table-column label="备注" width="180" prop="bz"></el-table-column>
+              <el-table-column label="操作">
+              <template slot-scope="scope">
+                  <el-button size="mini" @click="myEdit(scope.row,'set_edit')">编辑</el-button>
+                  <el-button size="mini" type="danger" @click="myDelete(scope.$index,'策略-'+scope.row.seName,{se_id:scope.row.id},'api/Settings/Delete','api/Settings/Show')">删除</el-button>
+              </template>
+              </el-table-column>
+        </el-table>
         </div>
         <div class="block" style="height:32px">
             <el-pagination
@@ -49,16 +47,11 @@ export default {
           region: ''
         },
         formLabelWidth: '120px',  
-        tableData: [
-            {id:1,name:'第一方案',howbuy:'09:20:11',howsale:"09:25:11",bz:'恭喜发财11'},
-            {id:2,name:'第二方案',howbuy:'09:20:22',howsale:"09:25:22",bz:'恭喜发财222'},
-            {id:3,name:'第三方案',howbuy:'09:20:33',howsale:"09:25:33",bz:'恭喜发财333'},
-            {id:4,name:'第四方案',howbuy:'09:20:44',howsale:"09:25:44",bz:'恭喜发财4444'}
-        ]
+        tableData: []
       }
     },
     mounted(){
-    //   this.myInit('api/Settings/Show',{IndexPage:"1",PageSize:"10"})
+        this.myInit('api/Settings/Show',{IndexPage:"1",PageSize:"10"})
     },
     methods:{
       myInit,
@@ -66,7 +59,33 @@ export default {
       myEdit,
       myAdd,
       handleSizeChange,
-      handleCurrentChange
+      handleCurrentChange,
+      buy(row){
+          if(row.howbuy==2){
+            return '买一价'
+          }else if(row.howbuy==3){
+            return '买二价'
+          }else if(row.howbuy==4){
+            return '买三价'
+          }else if(row.howbuy==5){
+            return '买四价'
+          }else if(row.howbuy==6){
+            return '买五价'
+          }
+      },
+      sale(row){
+          if(row.howsale==2){
+            return '卖一价'
+          }else if(row.howsale==3){
+            return '卖二价'
+          }else if(row.howsale==4){
+            return '卖三价'
+          }else if(row.howsale==5){
+            return '卖四价'
+          }else if(row.howsale==6){
+            return '卖五价'
+          }
+      }
     }
   }
 </script>

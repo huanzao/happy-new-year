@@ -6,7 +6,7 @@ export function req_AccountList(){
         url: 'api/Bond/ShowCapitalAc',
       }).then((res)=>{
           console.log('初始化数据------获取账号-------',res)
-          this.AccountList=res.data.result
+          this.AccountList=res.data.results
       }).catch((err)=>{
         //   this.$notify.error({
         //     title: '登录过期',
@@ -28,34 +28,35 @@ export function table_req(url,params,type){
     this.axios({
       method: 'post',
       headers:{'Authorization':'Bearer '+localStorage.token},
-      timeout:5000,
+      timeout:9000,
       url: url,
       data:this.$qs.stringify(params)
     }).then((res)=>{
         loading.close()
         console.log(res)
-        if(res.data.result===""){
+        if(res.data.results===""){
             this.$message({message:'暂无数据',type:'success'});  
         }else if(res.data.response==="fail"){
-            this.$message.warning(res.data.result)
+            this.$message.warning(res.data.results)
         }else{
             if(type==='sraech'){
-                this.tableData=JSON.parse(res.data.result)
+                this.tableData=res.data.results
             }else if(type==='cc'){
-                this.table_chicang=JSON.parse(res.data.result) 
+                this.table_chicang=res.data.results
             }else if(type==='wt'){
-                this.table_weituo=JSON.parse(res.data.result) 
+                this.table_weituo=res.data.results
             }else if(type==='cj'){
-                this.table_cj=JSON.parse(res.data.result) 
+                this.table_cj=res.data.results
             }else if(type==='cx'){
-                this.table_cx=JSON.parse(res.data.result) 
+                this.table_cx=res.data.results
             }else if(type==='jg'){
-                this.table_jg=JSON.parse(res.data.result) 
+                this.table_jg=res.data.results
             }else if(type==='gddm'){
-                this.table_gd=JSON.parse(res.data.result) 
+                this.table_gd=res.data.results
             }
         } 
     }).catch((error)=>{
+      console.log(error)
          loading.close()
         if (error.request) {
             this.$message.warning('请求超时,请稍后再试')

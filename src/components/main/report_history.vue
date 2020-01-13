@@ -365,25 +365,25 @@ export default {
                 }).then((res)=>{
                     loading.close()
                     console.log(res)
-                    if(res.data.result===""){
+                    if(res.data.results===""){
                         this.$message({message:'暂无数据',type:'success'});  
                     }else if(res.data.response==="fail"){
-                        this.$message.warning(res.data.result)
+                        this.$message.warning(res.data.results)
                     }else{
                         if(type==='sraech'){
-                            this.tableData=JSON.parse(res.data.result)
+                            this.tableData=JSON.parse(res.data.results)
                         }else if(type==='cc'){
-                            this.table_chicang=JSON.parse(res.data.result) 
+                            this.table_chicang=JSON.parse(res.data.results) 
                         }else if(type==='wt'){
-                            this.table_weituo=JSON.parse(res.data.result) 
+                            this.table_weituo=JSON.parse(res.data.results) 
                         }else if(type==='cj'){
-                            this.table_cj=JSON.parse(res.data.result) 
+                            this.table_cj=JSON.parse(res.data.results) 
                         }else if(type==='cx'){
-                            this.table_cx=JSON.parse(res.data.result) 
+                            this.table_cx=JSON.parse(res.data.results) 
                         }else if(type==='jg'){
-                            this.table_jg=JSON.parse(res.data.result) 
+                            this.table_jg=JSON.parse(res.data.results) 
                         }else if(type==='gddm'){
-                            this.table_gd=JSON.parse(res.data.result) 
+                            this.table_gd=JSON.parse(res.data.results) 
                         }
                     } 
                 }).catch((error)=>{
@@ -497,32 +497,32 @@ export default {
                 //还需根据结果再进行判断
                 console.log('搜索RES',res)
                 loading.close()
-                if(res.data.result===''){
+                if(res.data.results===''){
                     this.$message('暂无搜索数据');
                     return
                 }else if(res.data.response==='fail'){
-                    this.$message.error(res.data.result);
+                    this.$message.error(res.data.results);
                 }else{
-                    console.log('搜索结果',JSON.parse(res.data.result))
+                    console.log('搜索结果',JSON.parse(res.data.results))
                     this.isSearch=true
                     switch(this.activeName) {
                         case 'first':
                             this.tableData_search=true
-                            this.tableData=JSON.parse(res.data.result) 
+                            this.tableData=JSON.parse(res.data.results) 
                             break;
                         case 'second':
-                            this.table_chicang=JSON.parse(res.data.result) 
+                            this.table_chicang=JSON.parse(res.data.results) 
                             break;
                         case 'third':
                             this.table_weituo_search=true
-                            this.table_weituo=JSON.parse(res.data.result) 
+                            this.table_weituo=JSON.parse(res.data.results) 
                             break;
                         case 'fourth':
                             this.table_cj_search=true
-                            this.table_cj=JSON.parse(res.data.result) 
+                            this.table_cj=JSON.parse(res.data.results) 
                             break;
                         case 'fiveth':
-                            this.table_cx=JSON.parse(res.data.result) 
+                            this.table_cx=JSON.parse(res.data.results) 
                             break;            
                         default:
                             //默认代码块

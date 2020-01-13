@@ -12,7 +12,7 @@
                         <el-option
                             v-for="item in buy_option"
                             :key="item.value"
-                            :label="item.name+':  '+item.value"
+                            :label="item.name"
                             :value="item.value">
                         </el-option>
                     </el-select>
@@ -22,7 +22,7 @@
                         <el-option
                             v-for="item in buy_option"
                             :key="item.value"
-                            :label="item.name+':  '+item.value"
+                            :label="item.name"
                             :value="item.value">
                         </el-option>
                     </el-select>
@@ -51,11 +51,11 @@ export default {
             },
             formLabelWidth: '150px',  
             buy_option:[
-                {name:'一档',value:5.01},
-                {name:'二档',value:5.02},
-                {name:'三档',value:5.03},
-                {name:'四档',value:5.04},
-                {name:'五档',value:5.05},
+                {name:'一价',value:2},
+                {name:'二价',value:3},
+                {name:'三价',value:4},
+                {name:'四价',value:5},
+                {name:'五价',value:6},
             ],
             rules: {
               name:[

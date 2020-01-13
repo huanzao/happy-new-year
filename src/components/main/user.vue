@@ -13,61 +13,35 @@
             </el-tooltip>
         </div>
         <div>
-        <el-table
-    :data="tableData"
-    style="width: 100%;">
-    <el-table-column
-      label="登录名"
-      prop="account"
-      >
-    </el-table-column>
-    <el-table-column
-      label="姓名"
-      prop="username"
-      >
-    </el-table-column>
-    <el-table-column
-      label="角色"
-      prop="rolename"
-      >
-    </el-table-column>
-    <el-table-column
-      label="手机"
-      prop="phone"
-      >
-    </el-table-column>
-    <el-table-column
-      label="电话"
-      prop="tel"
-      >
-    </el-table-column>
-    <el-table-column
-      label="邮箱"
-      prop="email"
-      >
-    </el-table-column>
-    <el-table-column
-      label="创建时间"
-      prop="addtime"
-      width="160"
-      >
-    </el-table-column>
-    <el-table-column
-      label="备注"
-      prop="remark"
-      >
-    </el-table-column>
-    <el-table-column label="操作" width="150">
-      <template slot-scope="scope">
-        <el-button
-          size="mini"
-          @click="myEdit(scope.row,'user_edit')">编辑</el-button>
-        <el-button
-          size="mini"
-          type="danger"
-          @click="myDelete(scope.$index, '用户'+scope.row.username,{PeopleId:scope.row.peopleid},'api/People/DeletePeople','api/People/ShowPeople')">删除</el-button>
-      </template>
-    </el-table-column>
+        <el-table :data="tableData" style="width: 100%;">
+          <el-table-column label="登录名" prop="account"></el-table-column>
+          <el-table-column label="姓名" prop="username"></el-table-column>
+          <el-table-column label="角色" prop="rolename"></el-table-column>
+          <el-table-column label="手机" prop="phone"></el-table-column>
+          <el-table-column label="电话" prop="tel"></el-table-column>
+          <el-table-column label="邮箱" prop="email"></el-table-column>
+          <el-table-column
+            label="创建时间"
+            prop="addtime"
+            width="160"
+            >
+          </el-table-column>
+          <el-table-column
+            label="备注"
+            prop="remark"
+            >
+          </el-table-column>
+          <el-table-column label="操作" width="150">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="myEdit(scope.row,'user_edit')">编辑</el-button>
+              <el-button
+                size="mini"
+                type="danger"
+                @click="myDelete(scope.$index, '用户'+scope.row.username,{PeopleId:scope.row.peopleid},'api/People/DeletePeople','api/People/ShowPeople')">删除</el-button>
+            </template>
+          </el-table-column>
   </el-table>
         </div>
         <div class="block" style="height:32px">

@@ -16,10 +16,10 @@ export function myInit(url,params){
     }).then((res)=>{
         loading.close()
         console.log('初始化数据',res)
-        if(res.data.result.length===0){
+        if(res.data.results.length===0){
           this.$message.success('暂无数据');
         }
-        this.tableData=res.data.result
+        this.tableData=res.data.results
         this.totalpage=res.data.totalpage
     }).catch((err)=>{
         loading.close()
@@ -31,6 +31,40 @@ export function myInit(url,params){
           this.$router.push('/')
         },1000)
     })
+}
+export function myInit2(url,params){
+  this.isSearch=false
+  const loading = this.$loading({
+      lock: true,
+      text: '正在请求数据，请稍后',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+  });
+  this.axios({
+    method: 'post',
+    headers:{'Authorization':'Bearer '+localStorage.token},
+    timeout:5000,
+    url: url,
+    data:this.$qs.stringify(params)
+  }).then((res)=>{
+      loading.close()
+      console.log('初始化数据',res)
+      if(res.data.results.length===0){
+        this.$message.success('暂无数据');
+      }
+      this.tableData=res.data.results
+      this.table_option=res.data.result1
+      this.totalpage=res.data.totalpage
+  }).catch((err)=>{
+      loading.close()
+      this.$notify.error({
+        title: '登录过期',
+        message: '登录过期，请重新登录'
+      })
+      setTimeout(()=>{
+        this.$router.push('/')
+      },1000)
+  })
 }
 
 //搜索
@@ -57,7 +91,7 @@ export function mySearch(url,params){
         console.log('搜索结果',res)
         this.searchBoxShow=false
         this.isSearch=true
-        this.tableData=res.data.result
+        this.tableData=res.data.results
         this.totalPage=res.data.total_page
     }).catch((err)=>{
         loading.close()
@@ -188,7 +222,7 @@ export function handleSizeChange(val,url) { //分页
       loading.close()
       if(res.data.response==="success"){
           console.log('分页数据',res)
-          this.tableData=res.data.result
+          this.tableData=res.data.results
           this.totalpage=res.data.totalpage
       }else{
         this.$notify.error({
@@ -240,7 +274,7 @@ export function  handleCurrentChange(val,url) {
       loading.close()
         console.log(res)
         if(res.data.response==="success"){
-            this.tableData=res.data.result
+            this.tableData=res.data.results
             this.totalpage=res.data.totalpage
         }else{
           this.$notify.error({
@@ -272,7 +306,7 @@ export function reSetData(){
   this.searchBoxShow=false
   this.axios.post('api/show_order',postData).then((res)=>{
     console.log(res.data)
-    this.tableData=res.data.result
+    this.tableData=res.data.results
     this.totalPage=res.data.total_page
   }).catch((err)=>{
       this.$notify.error({
@@ -307,7 +341,7 @@ export function addUpload(url,formName){
               loading.close()
                 if(res.data.response==="success"){
                   this.$message({
-                      message: res.data.results,
+                      message: '提交成功',
                       type: 'success'
                   });
                   setTimeout(()=>{

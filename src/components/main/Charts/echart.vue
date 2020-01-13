@@ -4,68 +4,68 @@
             <el-tabs v-model="activeName" @tab-click="handleClick" style="">
               <el-tab-pane label="当日资金查询数据" name="first">
                   <template>
-                    <el-table :data="tableData" height="500" style="width: 100%">
-                        <el-table-column prop='a' label="资金账号"></el-table-column>
-                        <el-table-column prop='b' label="币别"></el-table-column>
-                        <el-table-column prop='c' label="资金余额"></el-table-column>
-                        <el-table-column prop='d' label="可用资金"></el-table-column>
-                        <el-table-column prop='e' label="冻结资金"></el-table-column>
-                        <el-table-column prop='f' label="可取资金"></el-table-column>
-                        <el-table-column prop='j' label="最新市值"></el-table-column>
-                        <el-table-column prop='h' label="总资金"></el-table-column>
-                        <el-table-column prop='i' label="买入冻结资金" width="120"></el-table-column>
+                    <el-table :data="tableData" height="300" style="width: 100%">
+                        <el-table-column prop='zjAccount' label="资金账号"></el-table-column>
+                        <el-table-column prop='bibie' label="币别"></el-table-column>
+                        <el-table-column prop='zjYue' label="资金余额"></el-table-column>
+                        <el-table-column prop='zjKeyong' label="可用资金"></el-table-column>
+                        <el-table-column prop='zjSalefrozen' label="冻结资金"></el-table-column>
+                        <el-table-column prop='zjKequ' label="可取资金"></el-table-column>
+                        <el-table-column prop='zuixinshizhi' label="最新市值"></el-table-column>
+                        <el-table-column prop='zjTotal' label="总资金"></el-table-column>
+                        <el-table-column prop='zjBuyfrozen' label="买入冻结资金" width="120"></el-table-column>
                         <el-table-column prop='j' label="备注"></el-table-column>
-                        <el-table-column prop='k' label="句柄"></el-table-column>
-                        <el-table-column prop='l' label="保留信息"></el-table-column>
+                        <el-table-column prop='jubing' label="句柄"></el-table-column>
+                        <el-table-column prop='blMes' label="保留信息"></el-table-column>
                     </el-table>
                   </template>
               </el-tab-pane>
               <el-tab-pane label="当日持仓数据" name="second">
                   <template >
-                    <el-table :data="table_chicang" height="500" style="width: 100%">
-                        <el-table-column prop="a" label="证券代码"></el-table-column>
-                        <el-table-column prop="b" label="证券名称"></el-table-column>
-                        <el-table-column prop="c" label="证券数量"></el-table-column>
-                        <el-table-column prop="d" label="库存数量"></el-table-column>
-                        <el-table-column prop="e" label="可卖数量"></el-table-column>
-                        <el-table-column prop="f" label="成本价"></el-table-column>
-                        <el-table-column prop="g" label="盈亏成本价" width="120"></el-table-column>
-                        <el-table-column prop="h" label="当前价"></el-table-column>
-                        <el-table-column prop="i" label="最新市值"></el-table-column>
-                        <el-table-column prop="j" label="浮动盈亏"></el-table-column>
-                        <el-table-column prop="k" label="盈亏比例(%)" width="120"></el-table-column>
-                        <el-table-column prop="l" label="股东代码"></el-table-column>
-                        <el-table-column prop="m" label="帐号类别"></el-table-column>
-                        <el-table-column prop="n" label="交易所代码" width="120"></el-table-column>
-                        <el-table-column prop="o" label="资金帐号"></el-table-column>
-                        <el-table-column prop="p" label="交易所名称" width="120"></el-table-column>
-                        <el-table-column prop="q" label="句柄"></el-table-column>
-                        <el-table-column prop="r" label="保留信息"></el-table-column>
+                    <el-table :data="table_chicang" height="300" style="width: 100%">
+                        <el-table-column prop="bondCode" label="证券代码"></el-table-column>
+                        <el-table-column prop="bondName" label="证券名称"></el-table-column>
+                        <el-table-column prop="bondCount" label="证券数量"></el-table-column>
+                        <el-table-column prop="stockCount" label="库存数量"></el-table-column>
+                        <el-table-column prop="saleCount" label="可卖数量"></el-table-column>
+                        <el-table-column prop="cbPrice" label="成本价"></el-table-column>
+                        <el-table-column prop="ykcbPrice" label="盈亏成本价" width="120"></el-table-column>
+                        <el-table-column prop="price" label="当前价"></el-table-column>
+                        <el-table-column prop="newestShizhi" label="最新市值"></el-table-column>
+                        <el-table-column prop="ykFloat" label="浮动盈亏"></el-table-column>
+                        <el-table-column prop="ykPercent" label="盈亏比例(%)" width="120"></el-table-column>
+                        <el-table-column prop="shareholderCode" label="股东代码"></el-table-column>
+                        <el-table-column prop="accountType" label="帐号类别"></el-table-column>
+                        <el-table-column prop="jysCode" label="交易所代码" width="120"></el-table-column>
+                        <el-table-column prop="zjAccount" label="资金帐号"></el-table-column>
+                        <el-table-column prop="jysName" label="交易所名称" width="120"></el-table-column>
+                        <el-table-column prop="jubing" label="句柄"></el-table-column>
+                        <el-table-column prop="blMes" label="保留信息"></el-table-column>
                     </el-table>
                   </template>         
               </el-tab-pane>
               <el-tab-pane label="当日可撤订单数据" name="fiveth">
                   <template>
-                    <el-table :data="table_cx" height="500" style="width: 100%">
-                      <el-table-column prop="a" label="委托日期"></el-table-column>
-                      <el-table-column prop="b" label="委托时间"></el-table-column>
-                      <el-table-column prop="c" label="证券代码"></el-table-column>
-                      <el-table-column prop="d" label="证券名称"></el-table-column>
-                      <el-table-column prop="e" label="状态说明"></el-table-column>
-                      <el-table-column prop="f" label="买卖标志"></el-table-column>
-                      <el-table-column prop="g" label="买卖标志"></el-table-column>
-                      <el-table-column prop="h" label="委托价格"></el-table-column>
-                      <el-table-column prop="i" label="委托数量"></el-table-column>
-                      <el-table-column prop="j" label="委托金额"></el-table-column>
-                      <el-table-column prop="k" label="委托编号"></el-table-column>
-                      <el-table-column prop="l" label="成交数量"></el-table-column>
-                      <el-table-column prop="m" label="撤单数量"></el-table-column>
-                      <el-table-column prop="n" label="股东代码"></el-table-column>
-                      <el-table-column prop="o" label="帐号类别"></el-table-column>
-                      <el-table-column prop="p" label="资金帐号"></el-table-column>
-                      <el-table-column prop="q" label="备注"></el-table-column>
-                      <el-table-column prop="r" label="句柄"></el-table-column>
-                      <el-table-column prop="s" label="保留信息"></el-table-column>
+                    <el-table :data="table_cx" height="300" style="width: 100%">
+                      <el-table-column prop="weituoDate" label="委托日期" width="100"></el-table-column>
+                      <el-table-column prop="weituoTime" label="委托时间"></el-table-column>
+                      <el-table-column prop="bondCode" label="证券代码"></el-table-column>
+                      <el-table-column prop="bondName" label="证券名称"></el-table-column>
+                      <el-table-column prop="ztRemark" label="状态说明"></el-table-column>
+                      <el-table-column prop="dealRemark" label="买卖标志1" width="100"></el-table-column>
+                      <el-table-column prop="dealRemarks" label="买卖标志2" width="100"></el-table-column>
+                      <el-table-column prop="weituoPrice" label="委托价格"></el-table-column>
+                      <el-table-column prop="weituoCount" label="委托数量"></el-table-column>
+                      <el-table-column prop="weituoJine" label="委托金额"></el-table-column>
+                      <el-table-column prop="weituoNum" label="委托编号"></el-table-column>
+                      <el-table-column prop="dealNum" label="成交数量"></el-table-column>
+                      <el-table-column prop="cdNum" label="撤单数量"></el-table-column>
+                      <el-table-column prop="shareholdersCode" label="股东代码"></el-table-column>
+                      <el-table-column prop="accountType" label="帐号类别"></el-table-column>
+                      <el-table-column prop="zjAccount" label="资金帐号"></el-table-column>
+                      <el-table-column prop="remarks" label="备注"></el-table-column>
+                      <el-table-column prop="jubing" label="句柄"></el-table-column>
+                      <el-table-column prop="blMes" label="保留信息"></el-table-column>
                     </el-table>
                   </template>  
               </el-tab-pane>
@@ -109,7 +109,7 @@ export default {
     }
   },
   mounted() {
-    this.table_req('api/Bond/ShowCapital',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'sraech')
+    this.table_req('api/bond/showcatable',{Account:1,PageSize:1000},'sraech')
     // this.timer=setInterval(()=>{
     //       console.log('5000定时器')
     //   },2000)
@@ -129,13 +129,13 @@ export default {
     handleClick(tab) {
           switch(this.activeName) {
               case 'first':
-                      this.table_req('api/Bond/ShowCapital',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'sraech')
+                      this.table_req('api/bond/showcatable',{Account:1,PageSize:"1",StartTime:1000},'sraech')
                   break;
               case 'second':
-                      this.table_req('api/Bond/ShowTodayHolder',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'cc') 
+                      this.table_req('api/bond/showchicang',{Account:1,PageSize:1000},'cc') 
                   break;
               case 'fiveth':
-                      this.table_req('api/Bond/ShowCd',{Account:this.Account,IndexPage:"1",PageSize:"1",StartTime:'',EndTime:''},'cx')
+                      this.table_req('api/bond/showchedan',{Account:1,PageSize:1000},'cx')
                   break; 
               default:
           }

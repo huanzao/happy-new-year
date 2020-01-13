@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="pageHead">
-            <span>证券用户列表</span>
+            <span>证券账户列表</span>
             <el-tooltip class="item" effect="dark" content="搜索" placement="bottom-end">
               <el-button size="mini" @click="searchBoxShow = true" type="primary" icon="el-icon-search"></el-button>
             </el-tooltip>
@@ -47,6 +47,11 @@
       >
     </el-table-column>
     <el-table-column
+      label="策略"
+      prop="set_name"
+      >
+    </el-table-column>
+    <el-table-column
       label="创建时间"
       prop="createtime"
       width="160"
@@ -65,7 +70,7 @@
         <el-button
           size="mini"
           type="danger"
-          @click="myDelete(scope.$index, '账号'+scope.row.acAccount,{Acid:scope.row.acId},'api/Bond/DeleteAc','api/Bond/ShowAc')">删除</el-button>
+          @click="myDelete(scope.$index, '账号'+scope.row.acAccount,{Acid:scope.row.acId,QuanshangId:scope.row.bondid,ZijinAccount:scope.row.zijinAccount},'api/Bond/DeleteAc','api/Bond/ShowAc')">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -96,7 +101,7 @@
     </div>
 </template>
 <script>
-import {myInit,myDelete,myEdit,myAdd,mySearch,handleSizeChange,handleCurrentChange} from '../../assets/comon'
+import {myInit2,myDelete,mySearch,handleSizeChange,handleCurrentChange} from '../../assets/comon'
 
 export default {
     data() {
@@ -110,20 +115,39 @@ export default {
           name: ''
         },
         formLabelWidth: '120px',  
-        tableData: []
+        tableData: [],
+        table_option:[]
       }
     },
     mounted(){
-      this.myInit('api/Bond/ShowAc',{IndexPage:"1",PageSize:"10"})
+      this.myInit2('api/Bond/ShowAc',{IndexPage:"1",PageSize:"10"})
     },
     methods:{
-      myInit,
+      myInit2,
       myDelete,  
-      myEdit,
-      myAdd,
       mySearch,
       handleSizeChange,
-      handleCurrentChange
+      handleCurrentChange,
+      myEdit(row,url){
+        let _url=url
+        this.$router.push({
+            name: _url,
+            params: {
+                row:row,
+                options:this.table_option
+            }
+        })
+      },
+      myAdd(url){
+        let _url=url
+        this.$router.push({
+            name: _url,
+            params: {
+                options:this.table_option
+            }
+
+        })
+      }
     }
   }
 </script>
