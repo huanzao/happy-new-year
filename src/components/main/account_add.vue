@@ -4,7 +4,7 @@
           <el-divider></el-divider>
         <div style="width:60%;padding:20px 0 20px 0">
         <el-form :model="ruleForm"  :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="用户">
+            <el-form-item label="用户" prop="UserId">
                 <el-select v-model="ruleForm.UserId" size="mini" style="width:100%" filterable placeholder="请选择">
                     <el-option v-for="(item,key) in people_options" :key="key" :label="item.username" :value="item.userid"></el-option>
                 </el-select>
@@ -18,18 +18,18 @@
             <el-form-item label="种类" prop="Cat">
                 <el-input v-model="ruleForm.Cat" size="mini" ></el-input>
             </el-form-item>
-            <el-form-item label="券商">
+            <el-form-item label="券商" >
                 <el-select v-model="watch_qs" size="mini" >
                   <el-option :label="item.name" :value="key" v-for="(item,key) in QuanShangSlect" :key='key'></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="姓名">
+            <el-form-item label="姓名" prop="Name">
                 <el-input v-model="ruleForm.Name" size="mini" ></el-input>
             </el-form-item>
             <el-form-item label="资金账号" prop="ZijinAccount">
                 <el-input v-model="ruleForm.ZijinAccount"  size="mini" ></el-input>
             </el-form-item>
-            <el-form-item label="策略">
+            <el-form-item label="策略" prop="set_id">
                 <el-select v-model="ruleForm.set_id" size="mini" >
                   <el-option :label="item.name" :value="item.id" v-for="(item,key) in this.$route.params.options" :key='key'></el-option>
                 </el-select>
@@ -39,7 +39,7 @@
             </el-form-item>
             
             <el-form-item>
-                <el-button type="primary" size="mini" @click="addUpload('api/Bond/AddAc','ruleForm')">提交</el-button>
+                <el-button type="primary" size="mini" @click="addUpload2('api/Bond/AddAc','ruleForm')">提交</el-button>
                 <el-button @click="myCancel" size="mini">取消</el-button>
             </el-form-item>
         </el-form>
@@ -47,28 +47,10 @@
     </div>
 </template>
 <script>
-import {addUpload,myCancel} from '../../assets/comon'
+import {addUpload2,myCancel} from '../../assets/comon'
 export default {
     data(){
-        var validatePass = (rule, value, callback) => {
-          if (value === '') {
-            callback(new Error('请输入密码'));
-          } else {
-            if (this.ruleForm.RePassword !== '') {
-              this.$refs.ruleForm.validateField('RePassword');
-            }
-            callback();
-          }
-        };
-        var validatePass2 = (rule, value, callback) => {
-          if (value === '') {
-            callback(new Error('请再次输入密码'));
-          } else if (value !== this.ruleForm.Password) {
-            callback(new Error('两次输入密码不一致!'));
-          } else {
-            callback();
-          }
-        };
+        
         return{
             QuanShangSlect:[],
             people_options:[],
@@ -90,49 +72,45 @@ export default {
               ZijinAccount:''
             },
             rules: {
-              Password: [
-                {required:true,validator: validatePass, trigger: 'blur' }
-              ],
-              RePassword: [
-                {required:true,validator: validatePass2, trigger: 'blur' }
+              UserId:[
+                {required:true,type:'number',message:'不能为空',tirgger:'change'}
               ],
               Account:[
                 {required:true,message:'不能为空',tirgger:'blur'}
               ],
-              name:[
+              YingyebuId:[
                 {required:true,message:'不能为空',tirgger:'blur'}
               ],
-              logname:[
+              Cat:[
                 {required:true,message:'不能为空',tirgger:'blur'}
               ],
-              password:[
+              watch_qs:[
+                {required:true,type:'number',message:'不能为空',tirgger:'change'}
+              ],
+              Name:[
                 {required:true,message:'不能为空',tirgger:'blur'}
               ],
-              repassword:[
+              ZijinAccount:[
                 {required:true,message:'不能为空',tirgger:'blur'}
+              ],
+              set_id:[
+                {required:true,type:'number',message:'不能为空',tirgger:'change'}
               ]
             },
         }
     },
     watch:{
         watch_qs:function(value){
-            console.log('watch........',value)
-            console.log(this.QuanShangSlect,)
-
             this.ruleForm.QuanshangId=this.QuanShangSlect[value].id
             this.ruleForm.QId=this.QuanShangSlect[value].q_Id
-            console.log('qqqqqqqqqq',this.ruleForm.QuanshangId,this.ruleForm.QId)
         }
     },
     mounted(){
-        console.log(this.$route.params)
-
          this.axios({
           method: 'post',
           headers:{'Authorization':'Bearer '+localStorage.token},
           url: 'api/Organ/SelectArea',
         }).then((res)=>{
-            console.log('初始化数据1111-------',res)
             this.people_options=res.data.resultstwo
         }).catch((err)=>{
             this.$notify.error({
@@ -150,8 +128,7 @@ export default {
           url: 'api/Bond/ShowCo',
           data:this.$qs.stringify({IndexPage:"1",PageSize:"10"})
         }).then((res)=>{
-            console.log('初始化数据-aaaaaa-------',res)
-            this.QuanShangSlect=res.data.result
+            this.QuanShangSlect=res.data.results
         }).catch((err)=>{
             this.$notify.error({
               title: '登录过期',
@@ -163,7 +140,7 @@ export default {
         })
     },
     methods:{
-      addUpload,
+      addUpload2,
       myCancel,
     }
 }

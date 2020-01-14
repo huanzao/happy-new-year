@@ -4,30 +4,10 @@
           <el-divider></el-divider>
         <div style="width:60%;padding:20px 0 20px 0">
         <el-form :model="ruleForm"  :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <!-- <el-form-item label="机构" prop="Organize">
-                <el-select v-model="WatchOrganize" size="mini">
-                    <el-option :label="item.orName" :value="item.id" v-for="(item,key) in organSelect" :key='key'></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="地区" prop="Area">
-                <el-select v-model="ruleForm.Area" size="mini" v-if='WatchOrganize'>
-                    <el-option :label="item.areaname" :value="item.areaid" v-for="(item,key) in area_role.results" :key='key'></el-option>
-                </el-select>
-                <el-input  size="mini"  autocomplete="off" disabled placeholder="请先选择机构" v-if='!WatchOrganize'></el-input>
-            </el-form-item>
-            <el-form-item label="部门" prop="Department">
-                <el-select v-model="ruleForm.Department" size="mini" v-if='WatchOrganize'  >
-                    <el-option :label="item.dename" :value="item.deid" v-for="(item,key) in area_role.resultstwo" :key='key'></el-option>
-                </el-select>
-                <el-input  size="mini"  autocomplete="off" disabled placeholder="请先选择机构" v-if='!WatchOrganize'></el-input>
-            </el-form-item> -->
-            
-            
             <el-form-item label="角色" prop="Role">
                 <el-select v-model="ruleForm.Role" size="mini">
                     <el-option :label="item.rolename" :value="item.id" v-for="(item,key) in roleEslect" :key='key'></el-option>
                 </el-select>
-                
             </el-form-item>
 
             <el-form-item label="登录名" prop="Account">
@@ -96,23 +76,6 @@ export default {
             organSelect:[],
             roleEslect:[],
             area_role:'',
-            options: [{
-                value: '1',
-                label: '黄金糕'
-              }, {
-                value: '2',
-                label: '双皮奶'
-              }, {
-                value: '1',
-                label: '蚵仔煎'
-              }, {
-                value: '1',
-                label: '龙须面'
-              }, {
-                value: '1',
-                label: '北京烤鸭'
-              }
-            ],
             ruleForm:{
               Account:"",
               Password:"",
@@ -128,6 +91,9 @@ export default {
               Remark:"",
             },
             rules: {
+              Role: [
+                {type: 'number',required:true,message:'不能为空',tirgger:'change'}
+              ],
               Password: [
                 {required:true,validator: validatePass, trigger: 'blur' }
               ],
@@ -152,13 +118,12 @@ export default {
             },
         }
     },
-    mounted(){
+    beforeMount(){
         this.axios({
           method: 'post',
           headers:{'Authorization':'Bearer '+localStorage.token},
           url: 'api/People/SelectOrgan',
         }).then((res)=>{
-            console.log('初始化数据22229-------',res)
             this.organSelect=res.data.results
             this.roleEslect=res.data.resultstwo
         }).catch((err)=>{
@@ -172,37 +137,11 @@ export default {
         })
     },
     watch:{
-      WatchOrganize:function(value){
-        let id=value
-        console.log('......',id)
-        console.log("test",value)
-        this.ruleForm.Organize=value
-        this.axios({
-          method: 'post',
-          headers:{'Authorization':'Bearer '+localStorage.token},
-          url: 'api/People/SelectOrgan',
-          data:this.$qs.stringify({OrganId:id})
-        }).then((res)=>{
-            console.log('初始化数据2222222-------',res)
-            this.area_role=res.data
-        }).catch((err)=>{
-            this.$notify.error({
-              title: '登录过期',
-              message: '登录过期，请重新登录'
-            })
-            setTimeout(()=>{
-              this.$router.push('/')
-            },1000)
-        })
-
-      }
+      
     },
     methods:{
       addUpload,
       myCancel,
-      handclickgs(value){
-          console.log(3333,value)
-      },
       search(){
           const loading = this.$loading({
               lock: true,
@@ -217,7 +156,6 @@ export default {
               url: 'api/search_xhmc',
               data: param
           }).then((res)=>{
-              console.log(res.data)
               loading.close()
               if(res.data.result.length==0){
                   this.$message("暂无数据");

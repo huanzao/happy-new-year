@@ -29,17 +29,13 @@ export default {
                  Roleremark:''
             },
             rules: {
-              name:[
+              Rolename:[
                 {required:true,message:'不能为空',tirgger:'blur'}
-              ],
-              organ:[
-                {required:true,message:'不能为空',tirgger:'blur'}
-              ],
+              ]
             }
         }
     },
     mounted(){
-        console.log('role',this.$route.params.row)
         this.ruleForm.Id=this.$route.params.row.id
         this.ruleForm.Rolename=this.$route.params.row.rolename
         this.ruleForm.Roleremark=this.$route.params.row.roleremark

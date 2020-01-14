@@ -149,46 +149,6 @@ const router= new Router({
           component: ()=>import('@/components/main/set_time_edit.vue')
         },
         {
-          path: 'key',               
-          name: 'key',
-          component: ()=>import('@/components/main/Adatabase/keys.vue')
-        },
-        {
-          path: 'tt',               
-          name: 'tt',
-          component: ()=>import('@/components/main/000.vue')
-        },
-        {
-          path: 'goods',               //商品报价
-          name: 'goods',
-          component: ()=>import('@/components/main/00_goods.vue'), 
-        },
-        {
-          path: 'goods_add',               //商品报价
-          name: 'goods_add',
-          component: ()=>import('@/components/main/00_goods_add.vue'), 
-        },
-        {
-          path: 'goods_offer',               //商品报价
-          name: 'goods_offer',
-          component: ()=>import('@/components/main/01_goods_offer.vue'), 
-        },
-        {
-          path: 'goods_offer_add',
-          name: 'goods_offer_add',
-          component: ()=>import('@/components/main/01_goods_offer_add.vue') 
-        },
-        {
-          path: 'goods_offer_edit',
-          name: 'goods_offer_edit',
-          component: ()=>import('@/components/main/01_goods_offer_edit.vue') 
-        },
-        {
-          path: 'goods_offer_detail',
-          name: 'goods_offer_detail',
-          component: ()=>import('@/components/main/01_goods_offer_detail.vue') 
-        },
-        {
           path: 'echarts',
           name: 'echarts',
           component: ()=>import('@/components/main/Charts/echart.vue') 

@@ -36,7 +36,7 @@
                                 <div class="myRadio" @click='myRadio_fun(scope.row,scope.$index)' v-else style='color:#909399' ><i class="el-icon-error">禁用</i></div>
                             </template>
                         </el-table-column>
-                        
+                        <el-table-column label="备注"  prop="bz"></el-table-column>
                         <el-table-column label="操作">
                         <template slot-scope="scope">
                             <el-button size="mini" @click="myEdit(scope.row,'set_time_edit')">编辑</el-button>
@@ -63,7 +63,6 @@ export default {
       }
     },
     mounted(){
-         console.log('aaaaaaaabbbbbbbbbb',this.$route.params.id)
         if(this.$route.params.id==1){
             this.activeName='first'
             this.myInit('api/Settings/Show',{IndexPage:"1",PageSize:"100"})
@@ -71,8 +70,6 @@ export default {
             this.activeName='second'
             this.myInit('api/SettingsTime/Show',{IndexPage:"1",PageSize:"100"})
         }
-        
-        console.log('aaaaaaaa',this.$route.query)
     },
     watch:{
         
@@ -86,32 +83,23 @@ export default {
       myAdd,
       //tab栏切换函数
       handleClick(){
-          console.log('切换')
           if(this.activeName==='first'){
-              console.log('aaaaaaaa',this.$route.query)
               this.$router.push({path:'1'})
               this.myInit('api/Settings/Show',{IndexPage:"1",PageSize:"100"})
           }else if(this.activeName==='second'){
-              console.log('aaaaaaaa',this.$route.params.id)
-              console.log(4444444)
               this.myInit('api/SettingsTime/Show',{IndexPage:"1",PageSize:"100"})
               this.$router.push({path:'2'})
-              this.tableData.forEach(function(item,i){
-                  console.log(item,i)
-              })
           }
       },
       //王祈年
       myRadio_fun(row,index){
           let firt=''
           let second=''
-          console.log(row,index)
           if(row.used==1){
               return
           }if(row.used==0){
               let _this=this
               this.tableData.forEach(function(item,i){
-                  console.log('qq',item,i)
                   if(item.used==1){
                       firt=item.id
                   }
@@ -134,7 +122,6 @@ export default {
                 data:this.$qs.stringify({Id_one:second,Id_two:firt})
                 }).then((res)=>{
                 loading.close()
-                    console.log(res)
                     if(res.data.response==="success"){
                         this.$message.success('设置成功')
                     }else{
@@ -153,14 +140,8 @@ export default {
                     setTimeout(()=>{
                         this.$router.push('/')
                     },1000)
-                
                 })
-
-
-
-
           }
-          console.log(firt,second)
       },
       new_myAdd(){
           if(this.activeName==='first'){
@@ -194,133 +175,6 @@ export default {
           }else if(row.howsale==6){
             return '卖五价'
           }
-      },
- 
-      //策略提交函数
-      do_setting(){
-            console.log('提交设置')
-            this.setTactics=false
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            let updata=this.celueData
-            console.log('添加或修改提交的信息',updata)
-            this.axios({
-                method: 'post',
-                headers:{
-                    'Authorization':'Bearer '+localStorage.token
-                },
-                timeout:5000,
-                url: 'aaa',
-                data:this.$qs.stringify(updata)
-            }).then((res)=>{
-                console.log('res11111111',res)
-                loading.close()
-                if(res.data.response==="success"){
-                    this.$message({
-                        message: res.data.results,
-                        type: 'success'
-                    });
-                    setTimeout(()=>{
-                        window.history.go(-1)
-                    },1000)
-                }else{
-                    this.$message({
-                        message: res.data.results,
-                        type: 'warning'
-                    });
-                }
-            }).catch((err)=>{
-                console.log('error0000000',err)
-                loading.close()
-                this.$notify.error({
-                    title: '登录过期',
-                    message: '请重新登陆'
-                });
-                setTimeout(()=>{
-                    this.$router.push('/')
-                },1000)
-            })
-      },
-      
-      //时间设置弹出函数
-      setTime_show(type){
-          if(type===0){
-                this.setTime_tile='买入时间'
-                this.dialog_time=this.searchData.buyTime
-          }else if(type===1){
-                this.dialog_time=this.searchData.sellTime
-                this.setTime_tile='出售时间'
-          }else if(type===2){
-                this.dialog_time=this.searchData.sellTime
-                this.setTime_tile='获取买入价格时间'
-          }else if(type===3){
-                this.dialog_time=this.searchData.sellTime
-                this.setTime_tile='获取卖出价格时间'
-          }
-          this.setTime=true
-      },
-      //时间设置提交函数
-      globle_setTime(){
-            if(this.setTime_tile==='买入时间'){
-              this.searchData.buyTime=this.dialog_time
-            }else if(this.setTime_tile==='出售时间'){
-              this.searchData.sellTime=this.dialog_time
-            }else if(this.setTime_tile==='获取买入价格时间'){
-              this.searchData.buyTime_Hq=this.dialog_time
-            }else if(this.setTime_tile==='获取卖出价格时间'){
-              this.searchData.sellTime_Hq=this.dialog_time
-            }
-            this.setTime=false
-            console.log(this.searchData)
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
-            let updata=this.searchData
-            console.log('添加或修改提交的信息',updata)
-            this.axios({
-                method: 'post',
-                headers:{
-                    'Authorization':'Bearer '+localStorage.token
-                },
-                timeout:5000,
-                url: 'api/bond/settime',
-                data:this.$qs.stringify(updata)
-            }).then((res)=>{
-                console.log('res11111111',res)
-                loading.close()
-                if(res.data.response==="success"){
-                    this.$message({
-                        message: res.data.results,
-                        type: 'success'
-                    });
-                    setTimeout(()=>{
-                        window.history.go(-1)
-                    },1000)
-                }else{
-                    this.$message({
-                        message: res.data.results,
-                        type: 'warning'
-                    });
-                }
-            }).catch((err)=>{
-                console.log('error0000000',err)
-                loading.close()
-                this.$notify.error({
-                    title: '登录过期',
-                    message: '请重新登陆'
-                });
-                setTimeout(()=>{
-                    this.$router.push('/')
-                },1000)
-            })
-
       }
     }
   }

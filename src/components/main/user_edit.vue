@@ -5,12 +5,12 @@
         <div style="width:60%;padding:20px 0 20px 0">
         <el-form :model="ruleForm"  :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="角色" prop="Role">
-                <el-select v-model="ruleForm.Roleid" size="mini">
+                <el-select v-model="watch_role" size="mini">
                     <el-option  v-for="(item,key) in roleEslect" :key='key' :label="item.rolename" :value="item.id" ></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="登录名" >
-                <el-input v-model="ruleForm.Account" size="mini"  autocomplete="off" ></el-input>
+                <el-input v-model="ruleForm.Account" size="mini"  disabled autocomplete="off" ></el-input>
             </el-form-item>
             <el-form-item label="姓名" >
                 <el-input v-model="ruleForm.Username" size="mini" ></el-input>
@@ -46,6 +46,8 @@ export default {
             organSelect:[],
             roleEslect:[],
             area_role:'',
+            watch_role:'',
+            watch_role_num:0,
             ruleForm:{
                 Id:'',
                 Roleid:'',
@@ -76,18 +78,20 @@ export default {
         }
     },
     watch:{
-        watch_role:function(){
-          
+        watch_role:function(value){
+            if(this.watch_role_num===0){
+              this.watch_role_num=1
+            }else{
+              this.ruleForm.Roleid=value
+            }
         }
     },
     mounted(){
-        console.log('编辑传参',this.ruleForm)
         this.axios({
           method: 'post',
           headers:{'Authorization':'Bearer '+localStorage.token},
           url: 'api/People/SelectOrgan',
         }).then((res)=>{
-            console.log('初始化数据roleEslect-------',res)
             this.roleEslect=res.data.resultstwo
         }).catch((err)=>{
             this.$notify.error({
@@ -98,6 +102,8 @@ export default {
               this.$router.push('/')
             },1000)
         })
+
+        this.watch_role=this.$route.params.row.rolename
 
         this.ruleForm.Id=this.$route.params.row.peopleid
         this.ruleForm.Account=this.$route.params.row.account
@@ -111,10 +117,6 @@ export default {
     methods:{
       addUpload,
       myCancel,
-      handclickgs(value){
-          console.log(3333,value)
-      },
-     
     }
 }
 </script>

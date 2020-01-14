@@ -28,12 +28,9 @@ export default {
                 Roleremark:''
             },
             rules: {
-              name:[
+              Rolename:[
                 {required:true,message:'不能为空',tirgger:'blur'}
-              ],
-              organ:[
-                {required:true,message:'不能为空',tirgger:'blur'}
-              ],
+              ]
             }
         }
     },

@@ -2,9 +2,9 @@
     <div>
         <div class="pageHead">
             <span>用户列表</span>
-            <el-tooltip class="item" effect="dark" content="搜索" placement="bottom-end">
+            <!-- <el-tooltip class="item" effect="dark" content="搜索" placement="bottom-end">
               <el-button size="mini" @click="searchBoxShow = true" type="primary" icon="el-icon-search"></el-button>
-            </el-tooltip>
+            </el-tooltip> -->
             <el-tooltip class="item" effect="dark" content="添加" placement="bottom-end">
               <el-button size="mini" @click="myAdd('user_add')"  type="success" icon="el-icon-plus"></el-button>
             </el-tooltip>

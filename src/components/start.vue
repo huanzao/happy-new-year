@@ -40,7 +40,6 @@
                     let postData = this.$qs.stringify(this.ruleForm)
                     this.axios.post('api/login',postData,{timeout:5000}).then((res)=>{
                         loading.close()
-                        console.log(res)
                         localStorage.token=res.data.token
                         localStorage.user=this.ruleForm.Account
                         if(res.data.response==="fail"){

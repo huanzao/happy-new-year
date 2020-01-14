@@ -10,10 +10,10 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="账号">
-                <el-input v-model="ruleForm.Account" size="mini"  autocomplete="off" ></el-input>
+                <el-input v-model="ruleForm.Account" size="mini" disabled  autocomplete="off" ></el-input>
             </el-form-item>
             
-            <el-form-item label="营业部">
+            <el-form-item label="营业部" prop="YingyebuId">
                 <el-input v-model="ruleForm.YingyebuId" size="mini" ></el-input>
             </el-form-item>
             <el-form-item label="种类" prop="Cat">
@@ -24,7 +24,7 @@
                   <el-option :label="item.name" :value="key" v-for="(item,key) in QuanShangSlect" :key='key'></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="姓名">
+            <el-form-item label="姓名" prop="Name">
                 <el-input v-model="ruleForm.Name" size="mini" ></el-input>
             </el-form-item>
             <el-form-item label="资金账号" prop="ZijinAccount">
@@ -35,7 +35,7 @@
                   <el-option :label="item.name" :value="item.id" v-for="(item,key) in this.$route.params.options" :key='key'></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="备注" prop="Comments">
+            <el-form-item label="备注">
                 <el-input v-model="ruleForm.Comments" type="textarea" size="mini" ></el-input>
             </el-form-item>
             <el-form-item>
@@ -50,19 +50,6 @@
 import {addUpload,myCancel} from '../../assets/comon'
 export default {
     data(){
-        var validatePass = (rule, value, callback) => {
-            if (this.ruleForm.RePassword !== '') {
-              this.$refs.ruleForm.validateField('RePassword');
-            }
-            callback();
-        };
-        var validatePass2 = (rule, value, callback) => {
-          if (value !== this.ruleForm.Password) {
-            callback(new Error('两次输入密码不一致!'));
-          } else {
-            callback();
-          }
-        };
         return{
             QuanShangSlect:[],
             people_options:[],
@@ -86,25 +73,16 @@ export default {
               ZijinAccount:''
             },
             rules: {
-              Password: [
-                {required:true,validator: validatePass, trigger: 'blur' }
-              ],
-              RePassword: [
-                {required:true,validator: validatePass2, trigger: 'blur' }
-              ],
-              Account:[
+              YingyebuId:[
                 {required:true,message:'不能为空',tirgger:'blur'}
               ],
-              name:[
+              Cat:[
                 {required:true,message:'不能为空',tirgger:'blur'}
               ],
-              logname:[
+              Name:[
                 {required:true,message:'不能为空',tirgger:'blur'}
               ],
-              password:[
-                {required:true,message:'不能为空',tirgger:'blur'}
-              ],
-              repassword:[
+              ZijinAccount:[
                 {required:true,message:'不能为空',tirgger:'blur'}
               ]
             },
@@ -116,9 +94,6 @@ export default {
             if(this.watch_qs_num===1){
               return
             }
-            console.log(this.watch_qs_num,'watch........',value)
-            console.log(this.QuanShangSlect,)
-
             this.ruleForm.QuanshangId=this.QuanShangSlect[value].q_Id
             this.ruleForm.Q_Id=this.QuanShangSlect[value].id
         },
@@ -131,18 +106,13 @@ export default {
         }
     },
     mounted(){
-        console.log(this.$route.params)
-
         this.watch_qs=this.$route.params.row.bondname
         this.ruleForm.UserId=this.$route.params.row.userid
         this.ruleForm.Q_Id=this.$route.params.row.qid
-
-
         this.ruleForm.Account=this.$route.params.row.acAccount
         this.ruleForm.YingyebuId=this.$route.params.row.yybid
         this.ruleForm.Cat=this.$route.params.row.cat
         this.ruleForm.QuanshangId=this.$route.params.row.bondid
-  
         this.ruleForm.Name=this.$route.params.row.acname
         this.ruleForm.Comments=this.$route.params.row.remark
         this.ruleForm.ZijinAccount=this.$route.params.row.zijinAccount
@@ -155,7 +125,6 @@ export default {
           headers:{'Authorization':'Bearer '+localStorage.token},
           url: 'api/Organ/SelectArea',
         }).then((res)=>{
-            console.log('初始化数据1111-------',res)
             this.people_options=res.data.resultstwo
         }).catch((err)=>{
             this.$notify.error({
@@ -173,9 +142,7 @@ export default {
           url: 'api/Bond/ShowCo',
           data:this.$qs.stringify({IndexPage:"1",PageSize:"10"})
         }).then((res)=>{
-            console.log('初始化数据-aaaaaa-------',res)
-            this.QuanShangSlect=res.data.result
-            
+            this.QuanShangSlect=res.data.results
         }).catch((err)=>{
             this.$notify.error({
               title: '登录过期',

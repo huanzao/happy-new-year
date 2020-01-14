@@ -5,7 +5,6 @@ export function req_AccountList(){
         timeout:5000,
         url: 'api/Bond/ShowCapitalAc',
       }).then((res)=>{
-          console.log('初始化数据------获取账号-------',res)
           this.AccountList=res.data.results
       }).catch((err)=>{
         //   this.$notify.error({
@@ -33,7 +32,6 @@ export function table_req(url,params,type){
       data:this.$qs.stringify(params)
     }).then((res)=>{
         loading.close()
-        console.log(res)
         if(res.data.results===""){
             this.$message({message:'暂无数据',type:'success'});  
         }else if(res.data.response==="fail"){
@@ -56,7 +54,6 @@ export function table_req(url,params,type){
             }
         } 
     }).catch((error)=>{
-      console.log(error)
          loading.close()
         if (error.request) {
             this.$message.warning('请求超时,请稍后再试')
@@ -79,7 +76,6 @@ export function mySell(index, text,params,url){
       confirmButtonText: '确定',
       type: 'warning'
     }).then(() => {
-      console.log(url)
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -93,7 +89,6 @@ export function mySell(index, text,params,url){
         data:this.$qs.stringify(params)
       }).then((res)=>{
         loading.close()
-          console.log(res)
           if(res.data.response==="fail"){
             this.$message({
               message: res.data.results,
@@ -114,7 +109,6 @@ export function mySell(index, text,params,url){
           })
       })
     }).catch((err) => {
-      console.log(46531523,err)
       this.$message({
         type: 'info',
         message: '已取消删除'
