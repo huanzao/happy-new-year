@@ -94,24 +94,24 @@
         <!-- 修改密码的弹框 -->
         <el-dialog title="修改密码" :visible.sync="dialogFormVisible">
           
-          <el-form :model="form"  :rules="rules" ref="form">
-            
-            <el-form-item label="输入原始密码"  prop="pss1" :label-width="formLabelWidth">
-              <el-input v-model="form.pss1" type='password' size='mini' autocomplete="off"></el-input>
+          <el-form :model="ruleForm"  :rules="rules" ref="ruleForm" :label-width="formLabelWidth">
+            <el-form-item label="账号" prop="account">
+              <el-input  v-model="ruleForm.account" size="mini" autocomplete="off"></el-input>
+            </el-form-item>  
+            <el-form-item label="旧密码" prop="password">
+              <el-input type="password" v-model="ruleForm.password" size="mini" autocomplete="off"></el-input>
+            </el-form-item> 
+             <el-form-item label="新密码" prop="pass">
+              <el-input type="password" v-model="ruleForm.pass" size="mini" autocomplete="off"></el-input>
             </el-form-item>
-            
-            <el-form-item label="输入新密码" prop="pss2" :label-width="formLabelWidth">
-              <el-input v-model="form.pss2" type='password' size='mini' autocomplete="off"></el-input>
-            </el-form-item>
-            
-            <el-form-item label="确认新密码" prop="pss3" :label-width="formLabelWidth">
-              <el-input v-model="form.pss3" type='password' size='mini' autocomplete="off"></el-input>
+            <el-form-item label="确认密码" prop="checkPass">
+              <el-input type="password" v-model="ruleForm.checkPass" size="mini" autocomplete="off"></el-input>
             </el-form-item>
           
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+            <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+            <el-button  size="mini" type="primary" @click="submitForm('ruleForm')">确 定</el-button>
           </div>
         </el-dialog>
 
@@ -122,6 +122,25 @@
 import {mapMutations} from 'vuex'
 export default {
     data() {
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.ruleForm.checkPass !== '') {
+            this.$refs.ruleForm.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.ruleForm.pass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
       return {
         formLabelWidth: '120px',
         activeIndex: '1',
@@ -129,37 +148,39 @@ export default {
         one_open:true,
         user:"",
         dialogFormVisible:false,
-        form:{
-            zh:"",
-            pss1:'',
-            pss2:'',
-            pss3:''
+        ruleForm:{
+            account:'',
+            password:'',
+            pass: '',
+            checkPass: '',
         },
         rules: {
-              pss1: [
-                { required: true, message: '请输入型号编号', trigger: 'blur' },
+              account:[
+                {required: true, message: '请输入账号', trigger: 'blur'}
               ],
-              pss2: [
-                { required: true, message: '请输入型号名称', trigger: 'blur' },
+              password:[
+                {required: true, message: '请输入账号', trigger: 'blur'}
               ],
-              pss3: [
-                { required: true, message: '请输入型号名称', trigger: 'blur' },
+              pass: [
+                { validator: validatePass, trigger: 'blur' }
+              ],
+              checkPass: [
+                { validator: validatePass2, trigger: 'blur' }
               ],
         }     
       };
     },
     mounted(){
-      this.user=localStorage.user
-      // if(sessionStorage.user){
-      //     this.user=sessionStorage.user
-      //     this.form.zh=sessionStorage.user
-      // }else{
-      //     this.$notify.error({
-      //       title: '错误',
-      //       message: '请登录'
-      //     })
-      //     this.$router.push('/')
-      // }  
+      
+      if(localStorage.token){
+          this.user=localStorage.user
+      }else{
+          this.$notify.error({
+            title: '错误',
+            message: '请登录'
+          })
+          this.$router.push('/')
+      }  
     },
     methods: {
       ...mapMutations(['clear_state']),
@@ -175,51 +196,36 @@ export default {
       submitForm(formName) {
           this.$refs[formName].validate((valid) => {
             if (valid) {
-              if(this.form.pss1==this.form.pss2){
-                  this.$message.error('新密码不能和旧密码一样');
-              }else if(this.form.pss2!=this.form.pss3){
-                  this.$message.error('两次输入的新密码不一致');
-              }else{
-                  const loading = this.$loading({
-                    lock: true,
-                    text: 'Loading',
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
-                  });
-              let param = new URLSearchParams()
-              let obj=this.form
-              Object.keys(obj).forEach(function(key){
-                  param.append(key, obj[key])
-              })
-              console.log(this.form)
-              this.axios({
+                const loading = this.$loading({
+                  lock: true,
+                  text: 'Loading',
+                  spinner: 'el-icon-loading',
+                  background: 'rgba(0, 0, 0, 0.7)'
+                });
+                var updata={
+                  Account:this.ruleForm.account,
+                  Password:this.ruleForm.password,
+                  NewPassword:this.ruleForm.pass
+                }
+                this.axios({
                   method: 'post',
-                  url: 'api/change_password',
-                  data: param
-              }).then((res)=>{
-                      loading.close()
-                      
-                      if(res.data.success==1){
-                          this.dialogFormVisible=false
-                          this.$message({
-                            message: '密码修改成功,请重新登录',
-                            type: 'success'
-                          });
-                          sessionStorage.user=""
-                          this.$router.push('/')
-                      }else{
-                          this.$message.error(res.data.result);
-                      }
-                  }).catch(()=>{
-                      loading.close()
-                      this.$notify.error({
-                        title: '错误',
-                        message: '网路故障，请稍后再试'
-                      })
-                  })
-                  
-              }
-
+                  headers:{'Authorization':'Bearer '+localStorage.token},
+                  timeout:5000,
+                  url: 'api/People/ChangePassword',
+                  data:this.$qs.stringify(updata)
+                }).then((res)=>{
+                   console.log(1111111111)
+                    loading.close()
+                    this.dialogFormVisible=false
+                    if(res.data.response==="success"){
+                        this.$message.success(res.data.results)
+                    }else{
+                      this.$message.warning(res.data.results)
+                    }
+                }).catch((error)=>{
+                    loading.close()
+                    this.$message.warning('用户名或密码错误')
+                })
             } 
           });
       },
