@@ -5,15 +5,11 @@ export function req_AccountList(){
         timeout:5000,
         url: 'api/Bond/ShowCapitalAc',
       }).then((res)=>{
+          console.log(res)
           this.AccountList=res.data.results
       }).catch((err)=>{
-        //   this.$notify.error({
-        //     title: '登录过期',
-        //     message: '登录过期，请重新登录'
-        //   })
-        //   setTimeout(()=>{
-        //     this.$router.push('/')
-        //   },1000)
+        console.log(err)
+        this.$message.warning('账号获取失败，请刷新后再试')
       })
 }
 
@@ -32,6 +28,7 @@ export function table_req(url,params,type){
       data:this.$qs.stringify(params)
     }).then((res)=>{
         loading.close()
+        console.log(11,res)
         if(res.data.results===""){
             this.$message({message:'暂无数据',type:'success'});  
         }else if(res.data.response==="fail"){
@@ -54,6 +51,7 @@ export function table_req(url,params,type){
             }
         } 
     }).catch((error)=>{
+      console.log(error)
          loading.close()
         if (error.request) {
             this.$message.warning('请求超时,请稍后再试')

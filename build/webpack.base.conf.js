@@ -27,6 +27,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      'vendor': path.resolve(__dirname, 'src/vendor') // 添加一个别名
     }
   },
   module: {

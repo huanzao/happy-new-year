@@ -11,7 +11,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       "/api":{
-       target:"http://api.mygoodstock.net:8081/api/",
+       target:"http://172.16.22.11:5000/api", 
+      //  target:"http://118.89.215.247:8080/api/", 
        changeOrigin:true,
        pathRewrite:{
         "^/api":""
@@ -20,13 +21,17 @@ module.exports = {
      },
 
     // Various Dev Server settings
-    host: '172.16.0.163', // can be overwritten by process.env.HOST
+    host: '172.16.22.10', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
-
+    useEslint: true,
+    showEslintErrorsInOverlay: false,
+    devtool: 'eval-source-map',
+    cacheBusting: true,
+    cssSourceMap: false,
     
     /**
      * Source Maps
@@ -46,7 +51,6 @@ module.exports = {
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
-
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
